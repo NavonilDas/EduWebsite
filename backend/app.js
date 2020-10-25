@@ -13,6 +13,12 @@ app.use(require('morgan')('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// Override Express
+app.use((req, res, next) => {
+    res.set('X-Powered-By', 'Edu Plus');
+    next();
+});
+
 // For MONGODB
 if (isDevelopment) {
     mongoose.connect(`mongodb://${process.env.MONGO_HOST}/${process.env.MONGO_DB}`, {
