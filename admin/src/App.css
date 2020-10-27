@@ -13,3 +13,9 @@
 .admin-body{
   margin-top: 65px;
 }
+a{
+  text-decoration: none;
+}
+.card-img{
+  height: 140px;
+}

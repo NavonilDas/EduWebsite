@@ -8,6 +8,7 @@ import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
+import { Link } from 'react-router-dom';
 // import InboxIcon from '@material-ui/icons/MoveToInbox';
 // import MailIcon from '@material-ui/icons/Mail';
 
@@ -30,6 +31,29 @@ class SideBar extends React.Component {
 
     render() {
         const { classes } = this.props;
+        const items = [
+            {
+                name: 'Home',
+                icon: 'fa-home',
+                to: '/'
+            },
+            {
+                name: 'Users',
+                icon: 'fa-user-circle',
+                to: '/users'
+            },
+            {
+                name: 'Analytics',
+                icon: 'fa-home',
+                to: '/dashboard'
+            },
+            {
+                name: 'Profile',
+                icon: 'fa-cog',
+                to: '/profile'
+            }
+        ];
+
         return (
             <div>
                 <CssBaseline />
@@ -47,12 +71,18 @@ class SideBar extends React.Component {
                     </div>
                     <Divider />
                     <List>
-                        {['Home', 'User', 'Analytics', 'Profile'].map((text, index) => (
-                            <ListItem button key={text}>
-                                {/* <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon> */}
-                                <ListItemText primary={text} />
-                            </ListItem>
-                        ))}
+                        {
+                            items.map((ele, index) => (
+                                <Link to={ele.to} key={`link-${index}`}>
+                                    <ListItem button key={ele.name}>
+                                        <ListItemIcon>
+                                            <i className={`fa ${ele.icon} fa-2x`}></i>
+                                        </ListItemIcon>
+                                        <ListItemText primary={ele.name} />
+                                    </ListItem>
+                                </Link>
+                            ))
+                        }
                     </List>
                 </Drawer>
             </div>
