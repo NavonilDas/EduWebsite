@@ -19,3 +19,11 @@ a{
 .card-img{
   height: 140px;
 }
+.course-form{
+  display: flex;
+  flex-direction: column;
+}
+
+.course-form > *{
+  margin-top: 2em !important;
+}

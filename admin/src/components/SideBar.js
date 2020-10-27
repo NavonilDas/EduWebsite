@@ -11,7 +11,11 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import { Link } from 'react-router-dom';
 // import InboxIcon from '@material-ui/icons/MoveToInbox';
 // import MailIcon from '@material-ui/icons/Mail';
-
+// Icons
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import SupervisedUserCircleIcon from '@material-ui/icons/SupervisedUserCircle';
+import HomeIcon from '@material-ui/icons/Home';
+import DashboardIcon from '@material-ui/icons/Dashboard';
 
 const drawerWidth = 240;
 
@@ -34,22 +38,22 @@ class SideBar extends React.Component {
         const items = [
             {
                 name: 'Home',
-                icon: 'fa-home',
+                icon: <HomeIcon />,
                 to: '/'
             },
             {
                 name: 'Users',
-                icon: 'fa-user-circle',
+                icon: <SupervisedUserCircleIcon />,
                 to: '/users'
             },
             {
                 name: 'Analytics',
-                icon: 'fa-home',
+                icon: <DashboardIcon />,
                 to: '/dashboard'
             },
             {
                 name: 'Profile',
-                icon: 'fa-cog',
+                icon: <AccountCircleIcon />,
                 to: '/profile'
             }
         ];
@@ -76,7 +80,7 @@ class SideBar extends React.Component {
                                 <Link to={ele.to} key={`link-${index}`}>
                                     <ListItem button key={ele.name}>
                                         <ListItemIcon>
-                                            <i className={`fa ${ele.icon} fa-2x`}></i>
+                                            {ele.icon}
                                         </ListItemIcon>
                                         <ListItemText primary={ele.name} />
                                     </ListItem>
