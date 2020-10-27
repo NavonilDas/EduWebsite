@@ -1,9 +1,7 @@
 import React from 'react';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
 import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
@@ -17,13 +15,6 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 const drawerWidth = 240;
 
 const style = theme => ({
-    root: {
-        display: 'flex',
-    },
-    appBar: {
-        width: `calc(100% - ${drawerWidth}px)`,
-        marginLeft: drawerWidth,
-    },
     drawer: {
         width: drawerWidth,
         flexShrink: 0,
@@ -31,13 +22,7 @@ const style = theme => ({
     drawerPaper: {
         width: drawerWidth,
     },
-    // necessary for content to be below app bar
     toolbar: theme.mixins.toolbar,
-    content: {
-        flexGrow: 1,
-        backgroundColor: theme.palette.background.default,
-        padding: theme.spacing(3),
-    },
 });
 
 
@@ -45,9 +30,8 @@ class SideBar extends React.Component {
 
     render() {
         const { classes } = this.props;
-        console.log(classes.content);
         return (
-            <div className={classes.root}>
+            <div>
                 <CssBaseline />
                 <Drawer
                     className={classes.drawer}
@@ -56,19 +40,14 @@ class SideBar extends React.Component {
                         paper: classes.drawerPaper,
                     }}
                     anchor="left">
-                    <div className={classes.toolbar} />
+                    <div className={classes.toolbar} >
+                        <Typography variant="h6" noWrap>
+                            Edu+ Admin
+                        </Typography>
+                    </div>
                     <Divider />
                     <List>
-                        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-                            <ListItem button key={text}>
-                                {/* <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon> */}
-                                <ListItemText primary={text} />
-                            </ListItem>
-                        ))}
-                    </List>
-                    <Divider />
-                    <List>
-                        {['All mail', 'Trash', 'Spam'].map((text, index) => (
+                        {['Home', 'User', 'Analytics', 'Profile'].map((text, index) => (
                             <ListItem button key={text}>
                                 {/* <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon> */}
                                 <ListItemText primary={text} />
@@ -76,16 +55,6 @@ class SideBar extends React.Component {
                         ))}
                     </List>
                 </Drawer>
-                <main className={classes.content}>
-                    <div className={classes.toolbar} />
-                    <AppBar position="fixed" className={classes.appBar}>
-                        <Toolbar>
-                            <Typography variant="h6" noWrap>
-                                Permanent drawer
-                            </Typography>
-                        </Toolbar>
-                    </AppBar>
-                </main>
             </div>
         );
     }
