@@ -7,6 +7,7 @@ import CreateCourse from './components/CreateCourse';
 import CreateQuiz from './components/CreateQuiz';
 
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import ViewCourse from './components/ViewCourse';
 
 class App extends React.Component {
   dashboard() {
@@ -18,6 +19,7 @@ class App extends React.Component {
             <Route path="/" exact component={Dashboard} />
             <Route path="/create/course" exact component={CreateCourse} />
             <Route path="/create/mcq" exact component={CreateQuiz} />
+            <Route path="/course/:slug" exact component={ViewCourse} />
           </Switch>
         </div>
       </Router>
