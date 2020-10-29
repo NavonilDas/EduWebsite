@@ -1,4 +1,4 @@
-import { Button, Collapse, IconButton } from '@material-ui/core';
+import { Button, Collapse, Divider, IconButton, List, ListItem, ListItemText } from '@material-ui/core';
 import React from 'react';
 import NavBar from './NavBar';
 import $ from 'jquery';
@@ -16,7 +16,8 @@ class ViewCourse extends React.Component {
         this.state = {
             title: "Course Title",
             saveChanges: false,
-            items: []
+            items: [],
+            list: []
         };
         this.save_btn = React.createRef();
         this.change = this.change.bind(this);
@@ -88,8 +89,15 @@ class ViewCourse extends React.Component {
                     ele.expand = !ele.expand;
                 }
                 return ele;
-            })
-        })
+            }),
+            list: [
+                'Video 1',
+                'Video 2',
+                'Quiz 1',
+                'Research Material',
+                'Quiz 2'
+            ]
+        });
     }
 
     render() {
@@ -111,18 +119,24 @@ class ViewCourse extends React.Component {
                             {this.state.items.map((ele, i) => (
                                 <li key={i}>{ele.title}
                                     <IconButton aria-label="Expand" onClick={() => this.expandDetail(ele.id, i)}>
-
                                         {ele.expand ? <ExpandLessIcon /> : <ExpandMoreIcon />}
                                     </IconButton>
-                                    <IconButton aria-label="Edit">
+                                    <IconButton aria-label="Edit" href={`/create/chapter?id=${ele.id}`}>
                                         <EditIcon />
                                     </IconButton>
                                     <IconButton style={{ color: "#db3825" }} aria-label="Delete" onClick={this.delete}>
                                         <DeleteIcon />
                                     </IconButton>
                                     <Collapse in={ele.expand} timeout="auto" unmountOnExit>
-                                        Test
-                                </Collapse>
+                                        <Divider />
+                                        <List component="nav">
+                                            {this.state.list.map((ele, i) => (
+                                                <ListItem button key={`list-${i}`}>
+                                                    <ListItemText primary={ele} />
+                                                </ListItem>
+                                            ))}
+                                        </List>
+                                    </Collapse>
                                 </li>
                             ))}
                         </ul>
