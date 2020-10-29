@@ -86,7 +86,7 @@ class Dashboard extends React.Component {
                                             <Button size="small" color="primary">
                                                 Share
                                         </Button>
-                                            <Button size="small" color="primary">
+                                            <Button size="small" color="primary" href="/course/test">
                                                 Edit
                                         </Button>
                                         </CardActions>
