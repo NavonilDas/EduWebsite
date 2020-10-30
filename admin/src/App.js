@@ -10,6 +10,7 @@ import CreateChapter from './components/CreateChapter';
 
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import ViewCourse from './components/ViewCourse';
+import Users from './components/Users';
 
 class App extends React.Component {
   dashboard() {
@@ -19,6 +20,7 @@ class App extends React.Component {
           <SideBar />
           <Switch>
             <Route path="/" exact component={Dashboard} />
+            <Route path="/users" exact component={Users} />
             <Route path="/create/course" exact component={CreateCourse} />
             <Route path="/create/chapter" exact component={CreateChapter} />
             <Route path="/create/mcq" exact component={CreateQuiz} />
