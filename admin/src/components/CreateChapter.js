@@ -12,8 +12,16 @@ import EditIcon from '@material-ui/icons/Edit';
 
 
 class CreateChapter extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            chapterId: -1
+        };
+    }
+
     componentDidMount() {
         const query = qs.parse(this.props.location.search, { ignoreQueryPrefix: true });
+        this.setState({ chapterId: query.id || -1 });
         $("#chapter-list").sortable({
         }).disableSelection();
     }
@@ -34,13 +42,13 @@ class CreateChapter extends React.Component {
                     </form>
                     <div className="d-flex" style={{ marginTop: "10px" }}>
                         <h2 style={{ flexGrow: 1 }}>Contents</h2>
-                        <Button variant="contained" color="primary" href="/create/chapter">
+                        <Button variant="contained" color="primary" href={`/add/video?cid=${this.state.chapterId}`}>
                             Add Video
                         </Button>
-                        <Button variant="contained" style={{ backgroundColor: "#097d01", marginLeft: "1em", marginRight: "1em" }} color="primary" href="/create/chapter">
+                        <Button variant="contained" style={{ backgroundColor: "#097d01", marginLeft: "1em", marginRight: "1em" }} color="primary" href={`/create/quiz?cid=${this.state.chapterId}`}>
                             Add Quiz
                         </Button>
-                        <Button variant="contained" color="secondary" href="/create/chapter">
+                        <Button variant="contained" color="secondary" href={`/add/media?cid=${this.state.chapterId}`}>
                             Add Media
                         </Button>
                     </div>

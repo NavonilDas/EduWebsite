@@ -2,7 +2,9 @@ import React from 'react';
 
 class CreateQuiz extends React.Component{
     render(){
-        return (<h1>Hello</h1>);
+        return (
+            <h1>Create Quiz</h1>
+        );
     }
 }
 
