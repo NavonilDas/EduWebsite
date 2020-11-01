@@ -9,9 +9,10 @@ import 'jquery-ui/ui/disable-selection';
 import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
+import CreateChapter from './Modals/CreateChapter';
 
 
-class CreateChapter extends React.Component {
+class Chapters extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -30,16 +31,9 @@ class CreateChapter extends React.Component {
             <main className="admin-content">
                 <NavBar title="Chapter" />
                 <div className="admin-body">
-                    <form className="course-form">
-                        <TextField required id="chapter-title" label="Chapter Title" />
-                        <TextField
-                            id="outlined-multiline-static"
-                            label="Chapter Description (Optional)"
-                            multiline
-                            rows={4}
-                            variant="outlined"
-                        />
-                    </form>
+
+                    <CreateChapter /> 
+
                     <div className="d-flex" style={{ marginTop: "10px" }}>
                         <h2 style={{ flexGrow: 1 }}>Contents</h2>
                         <Button variant="contained" color="primary" href={`/add/video?cid=${this.state.chapterId}`}>
@@ -71,4 +65,4 @@ class CreateChapter extends React.Component {
     }
 }
 
-export default CreateChapter;
+export default Chapters;
