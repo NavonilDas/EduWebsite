@@ -32,7 +32,7 @@ class Chapters extends React.Component {
                 <NavBar title="Chapter" />
                 <div className="admin-body">
 
-                    <CreateChapter /> 
+                    <CreateChapter chapterName="ABC" chapterDescription="Hello World" chapterID="10"/> 
 
                     <div className="d-flex" style={{ marginTop: "10px" }}>
                         <h2 style={{ flexGrow: 1 }}>Contents</h2>

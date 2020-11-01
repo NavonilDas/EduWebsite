@@ -4,7 +4,7 @@ import SideBar from './components/SideBar';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 import CreateQuiz from './components/CreateQuiz';
-import CreateChapter from './components/CreateChapter';
+import Chapters from './components/Chapters';
 
 
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
@@ -23,9 +23,9 @@ class App extends React.Component {
             <Route path="/category/:id" exact component={Courses} />
             <Route path="/create/category" exact component={Courses} />
             <Route path="/users" exact component={Users} />
-            <Route path="/create/chapter" exact component={CreateChapter} />
+            <Route path="/chapter/:id" exact component={Chapters} />
             <Route path="/create/quiz" exact component={CreateQuiz} />
-            <Route path="/course/:slug" exact component={ViewCourse} />
+            <Route path="/course/:id" exact component={ViewCourse} />
           </Switch>
         </div>
       </Router>

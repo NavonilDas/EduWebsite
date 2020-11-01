@@ -1,4 +1,4 @@
-import { Button, Collapse, Divider, IconButton, List, ListItem, ListItemText } from '@material-ui/core';
+import { Button, Collapse, Divider, IconButton, List, ListItem, ListItemText, Modal } from '@material-ui/core';
 import React from 'react';
 import NavBar from './NavBar';
 import $ from 'jquery';
@@ -9,6 +9,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
+import CreateChapter from './Modals/CreateChapter';
 
 class ViewCourse extends React.Component {
     constructor(props) {
@@ -17,12 +18,26 @@ class ViewCourse extends React.Component {
             title: "Course Title",
             saveChanges: false,
             items: [],
-            list: []
+            list: [],
+            openModal: false
         };
+
+        this.course_id = this.props.match.params.id;
         this.save_btn = React.createRef();
         this.change = this.change.bind(this);
         this.expandDetail = this.expandDetail.bind(this);
+        this.openModal = this.openModal.bind(this);
+        this.modalClose = this.modalClose.bind(this);
     }
+
+    modalClose() {
+        this.setState({ openModal: false });
+    }
+
+    openModal() {
+        this.setState({ openModal: true });
+    }
+
     change(event, ui) {
         // console.log(ui);
         if (this.save_btn?.current) {
@@ -32,7 +47,8 @@ class ViewCourse extends React.Component {
         // this.save_btn.current.disabled = false;
     }
     componentDidMount() {
-        // $()
+        // TODO: Fetch API
+
         $("#course-chapters").sortable({
             update: this.change
         }).disableSelection();
@@ -107,13 +123,14 @@ class ViewCourse extends React.Component {
                 <div className="admin-body d-flex flex-column">
                     <div className="d-flex">
                         <h2 style={{ flexGrow: 1 }}>Chapters</h2>
-                        <Button variant="contained" color="primary" href="/create/chapter">
+                        <Button variant="contained" color="primary" onClick={this.openModal}>
                             Add Chapter
                         </Button>
                         <Button style={{ marginLeft: "1em" }} variant="contained" color="secondary" disabled={!this.state.saveChanges} ref={this.save_btn}>
                             Save Changes
                         </Button>
                     </div>
+
                     <div>
                         <ul ref={this.tmp} id="course-chapters" className="sortable">
                             {this.state.items.map((ele, i) => (
@@ -121,7 +138,7 @@ class ViewCourse extends React.Component {
                                     <IconButton aria-label="Expand" onClick={() => this.expandDetail(ele.id, i)}>
                                         {ele.expand ? <ExpandLessIcon /> : <ExpandMoreIcon />}
                                     </IconButton>
-                                    <IconButton aria-label="Edit" href={`/create/chapter?id=${ele.id}`}>
+                                    <IconButton aria-label="Edit" href={`/chapter/${ele.id}`}>
                                         <EditIcon />
                                     </IconButton>
                                     <IconButton style={{ color: "#db3825" }} aria-label="Delete" onClick={this.delete}>
@@ -142,6 +159,15 @@ class ViewCourse extends React.Component {
                         </ul>
                     </div>
                 </div>
+
+                <Modal
+                    open={this.state.openModal}
+                    onClose={this.modalClose}
+                >
+                    <CreateChapter onSubmit={this.modalClose} modal="true"/>
+                </Modal>
+
+
             </main>
         );
     }
