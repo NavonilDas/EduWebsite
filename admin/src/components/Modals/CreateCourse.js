@@ -43,7 +43,7 @@ class CreateCourse extends React.Component {
     handleChange(event) {
         const ele = event.target;
         let tmp = {};
-        if (ele.type && ele.type == 'checkbox') {
+        if (ele.type && ele.type === 'checkbox') {
             tmp[ele.name] = ele.checked;
         } else {
             tmp[ele.name] = ele.value;
