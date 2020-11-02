@@ -122,9 +122,12 @@ class ViewCourse extends React.Component {
                 <NavBar title={this.state.title} />
                 <div className="admin-body d-flex flex-column">
                     <div className="d-flex">
-                        <h2 style={{ flexGrow: 1 }}>Chapters</h2>
+                        <h2 style={{ flexGrow: 1 }}>Chapters &amp; Tests</h2>
                         <Button variant="contained" color="primary" onClick={this.openModal}>
                             Add Chapter
+                        </Button>
+                        <Button variant="contained" style={{ backgroundColor: "#097d01", marginLeft: "1em", marginRight: "1em" }} color="primary">
+                            Add Test
                         </Button>
                         <Button style={{ marginLeft: "1em" }} variant="contained" color="secondary" disabled={!this.state.saveChanges} ref={this.save_btn}>
                             Save Changes
