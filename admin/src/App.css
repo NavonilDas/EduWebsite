@@ -58,3 +58,7 @@ a {
   background: #fff;
   padding: 16px;
 }
+
+.d-flex{
+  display: flex;
+}

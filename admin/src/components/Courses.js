@@ -7,53 +7,78 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import CreateCourse from './Modals/CreateCourse';
+import { Modal } from '@material-ui/core';
 
 class Courses extends React.Component {
+    constructor(props) {
+        super(props);
+        this.category_id = this.props.match.params.id;
+        this.state = {
+            openModal: false
+        };
+
+        this.openModal = this.openModal.bind(this);
+        this.modalClose = this.modalClose.bind(this);
+    }
+
+    modalClose() {
+        this.setState({ openModal: false });
+    }
+
+    openModal() {
+        this.setState({ openModal: true });
+    }
+
+    componentDidMount() {
+        // TODO: Fetch Courses
+    }
+
     render() {
         const items = [
             {
+                id: "xyz",
                 thumbnail: "https://prod-discovery.edx-cdn.org/media/course/image/bb5e9463-0248-4f78-a337-b8bb9d829f2b-a71b8e897830.small.jpeg",
-                title: "Programming in C",
+                title: "Phy",
                 description: "Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica",
-                by: "Pankaj Masiwal",
                 slug: "programming-in-c"
             },
             {
+                id: "xyz",
                 thumbnail: "https://prod-discovery.edx-cdn.org/media/course/image/bb5e9463-0248-4f78-a337-b8bb9d829f2b-a71b8e897830.small.jpeg",
-                title: "Programming in C",
+                title: "Chemistry",
                 description: "Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica",
-                by: "Pankaj Masiwal",
                 slug: "programming-in-c"
             },
             {
+                id: "xyz",
                 thumbnail: "https://prod-discovery.edx-cdn.org/media/course/image/bb5e9463-0248-4f78-a337-b8bb9d829f2b-a71b8e897830.small.jpeg",
-                title: "Programming in C",
+                title: "Maths",
                 description: "Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica",
-                by: "Pankaj Masiwal",
                 slug: "programming-in-c"
             },
             {
+                id: "xyz",
                 thumbnail: "https://prod-discovery.edx-cdn.org/media/course/image/bb5e9463-0248-4f78-a337-b8bb9d829f2b-a71b8e897830.small.jpeg",
                 title: "Programming in C",
                 description: "Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica",
-                by: "Pankaj Masiwal",
                 slug: "programming-in-c"
             },
             {
+                id: "xyz",
                 thumbnail: "https://prod-discovery.edx-cdn.org/media/course/image/bb5e9463-0248-4f78-a337-b8bb9d829f2b-a71b8e897830.small.jpeg",
                 title: "Programming in C",
                 description: "Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica",
-                by: "Pankaj Masiwal",
                 slug: "programming-in-c"
             },
         ];
         return (
             <main className="admin-content">
-                <NavBar title="Home" />
+                <NavBar title="Class Name" />
                 <div className="admin-body">
                     <div className="d-flex" style={{ marginBottom: '1em' }}>
                         <h1 style={{ flexGrow: 1 }}>Courses</h1>
-                        <Button variant="contained" color="primary" href="/create/course">
+                        <Button variant="contained" color="primary" onClick={this.openModal}>
                             Create Course
                         </Button>
                     </div>
@@ -75,9 +100,6 @@ class Courses extends React.Component {
                                                 <Typography variant="body2" color="textSecondary" component="p">
                                                     {ele.description}
                                                 </Typography>
-                                                <Typography variant="body2" color="textPrimary" component="p">
-                                                    By {ele.by}
-                                                </Typography>
                                             </CardContent>
 
                                         </CardActionArea>
@@ -86,7 +108,7 @@ class Courses extends React.Component {
                                             <Button size="small" color="primary">
                                                 Share
                                         </Button>
-                                            <Button size="small" color="primary" href="/course/test">
+                                            <Button size="small" color="primary" href={`/course/${ele.id}`}>
                                                 Edit
                                         </Button>
                                         </CardActions>
@@ -96,6 +118,15 @@ class Courses extends React.Component {
                         }
                     </div>
                 </div>
+
+                <Modal
+                    open={this.state.openModal}
+                    onClose={this.modalClose}
+                >
+                    <CreateCourse onClose={this.modalClose} />
+                </Modal>
+
+
             </main>
         );
     }
