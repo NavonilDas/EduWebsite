@@ -80,3 +80,20 @@ a {
   color: red;
   font-size: 1.1em;
 }
+
+.test-imgs img {
+  max-width: 100%;
+}
+.test-options {
+  flex-direction: column;
+}
+
+.content-wrapper {
+  max-width: 90%;
+}
+.content-editor {
+  background-color: #fff;
+  min-height: 500px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
