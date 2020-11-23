@@ -36,6 +36,10 @@ class Chapters extends React.Component {
 
                     <div className="d-flex" style={{ marginTop: "10px" }}>
                         <h2 style={{ flexGrow: 1 }}>Contents</h2>
+                        <Button variant="contained" color="primary">
+                            Add Content
+                        </Button>
+                        
                         <Button variant="contained" color="primary" href={`/add/video?cid=${this.state.chapterId}`}>
                             Add Video
                         </Button>
