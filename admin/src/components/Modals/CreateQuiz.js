@@ -124,7 +124,7 @@ class CreateQuiz extends React.Component {
 
     render() {
         return (
-            <div class="create-quiz modal">
+            <div className="create-quiz modal">
                 <h1>Create Quiz</h1>
                 <label className="label"> Question </label>
                 <div style={{ height: "350px", overflowY: "scroll" }}>

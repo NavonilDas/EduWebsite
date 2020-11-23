@@ -33,7 +33,7 @@ class CreateTest extends React.Component {
     }
 
     render() {
-        // SAMPLE Questions
+        // Sample Questions
         const questions = [
             {
                 question: "<p><b>Hello</b> This i Question</p>",
@@ -60,6 +60,52 @@ class CreateTest extends React.Component {
                         </Button>
                     </div>
 
+                    <List>
+                        {questions.map((ele, ind) => (
+                            <ListItem key={ind}>
+                                <Card style={{ width: "100%" }}>
+                                    <CardContent>
+                                        <div dangerouslySetInnerHTML={{ __html: ele.question }}></div>
+                                        <div className="test-imgs">
+                                            {ele.images.map((src, j) => (
+                                                <img src={src} alt={`opt${j}`} key={j} />
+                                            ))}
+                                        </div>
+
+                                        <div className="test-options d-flex">
+                                            {ele.options.map((opt, j) => (
+                                                <FormControlLabel
+                                                    key={j}
+                                                    control={
+                                                        <Checkbox
+                                                            name={`ans${j + 1}`}
+                                                            color="primary"
+                                                        />
+                                                    }
+                                                    checked={ele.answer.includes(opt)}
+                                                    // onChange={this.handleChange}
+                                                    label={opt}
+                                                />
+                                            ))}
+                                        </div>
+
+                                    </CardContent>
+
+
+                                    <CardActions>
+                                        <Button variant="contained" color="primary">
+                                            Edit
+                                        </Button>
+
+                                        <Button variant="contained" color="primary" style={{ backgroundColor: "#f0242e" }} onClick={() => this.deleteQuestion(ind)}>
+                                            Delete
+                                        </Button>
+
+                                    </CardActions>
+                                </Card>
+                            </ListItem>
+                        ))}
+                    </List>
 
 
 
