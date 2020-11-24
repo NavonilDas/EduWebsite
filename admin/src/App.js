@@ -14,6 +14,17 @@ import Courses from './components/Courses';
 import AddContent from './components/AddContent';
 
 class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isLogin: true
+    };
+  }
+  
+  componentDidMount() {
+    // TODO: Request
+  }
+
   dashboard() {
     return (
       <Router>
@@ -21,6 +32,7 @@ class App extends React.Component {
           <SideBar />
           <Switch>
             <Route path="/" exact component={Dashboard} />
+            <Route path="/login" exact component={Login} />
             <Route path="/category/:id" exact component={Courses} />
             <Route path="/create/category" exact component={Courses} />
             <Route path="/users" exact component={Users} />
@@ -35,10 +47,9 @@ class App extends React.Component {
   }
 
   render() {
-    const isLogin = true;
     return (
       <div className="App">
-        { isLogin ? this.dashboard() : <Login />}
+        { this.state.isLogin ? this.dashboard() : <Login />}
       </div>
     );
   }
