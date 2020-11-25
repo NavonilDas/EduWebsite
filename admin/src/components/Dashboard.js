@@ -19,7 +19,9 @@ class Dashboard extends React.Component {
         super(props);
         this.state = {
             openModal: false,
-            items: []
+            items: [],
+            selectedTitle: null,
+            selectedId: null
         };
 
         this.openModal = this.openModal.bind(this);
@@ -29,7 +31,11 @@ class Dashboard extends React.Component {
     }
 
     modalClose() {
-        this.setState({ openModal: false });
+        this.setState({
+            openModal: false,
+            selectedId: null,
+            selectedTitle: null
+        });
     }
 
     openModal() {
@@ -45,7 +51,7 @@ class Dashboard extends React.Component {
         // TODO: Genrate URL
     }
 
-    componentDidMount(){
+    componentDidMount() {
         // TODO: Request Categories
     }
 
@@ -147,7 +153,11 @@ class Dashboard extends React.Component {
                                             <IconButton aria-label="Edit"
                                                 style={{ color: "#097d01" }}
                                                 onClick={() => {
-                                                    // TODO: Show Modal
+                                                    this.setState({
+                                                        openModal: true,
+                                                        selectedId: ele.id,
+                                                        selectedTitle: ele.title
+                                                    });
                                                 }}
                                             >
                                                 <EditIcon />
@@ -178,7 +188,7 @@ class Dashboard extends React.Component {
                     open={this.state.openModal}
                     onClose={this.modalClose}
                 >
-                    <CreateCategory onClose={this.modalClose} />
+                    <CreateCategory onClose={this.modalClose} ID={this.selectedId} title={this.selectedTitle} />
                 </Modal>
 
             </main>
