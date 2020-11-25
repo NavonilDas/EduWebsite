@@ -18,11 +18,14 @@ class Dashboard extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            openModal: false
+            openModal: false,
+            items: []
         };
 
         this.openModal = this.openModal.bind(this);
         this.modalClose = this.modalClose.bind(this);
+        this.deleteCategory = this.deleteCategory.bind(this);
+        this.shareCategory = this.shareCategory.bind(this);
     }
 
     modalClose() {
@@ -31,6 +34,19 @@ class Dashboard extends React.Component {
 
     openModal() {
         this.setState({ openModal: true });
+    }
+
+    deleteCategory(id) {
+        // TODO: Request API
+
+    }
+
+    shareCategory(slug) {
+        // TODO: Genrate URL
+    }
+
+    componentDidMount(){
+        // TODO: Request Categories
     }
 
     render() {
@@ -128,18 +144,27 @@ class Dashboard extends React.Component {
                                         </CardActionArea>
 
                                         <CardActions style={{ paddingTop: 0 }}>
-                                            <IconButton aria-label="Edit" style={{ color: "#097d01" }}>
+                                            <IconButton aria-label="Edit"
+                                                style={{ color: "#097d01" }}
+                                                onClick={() => {
+                                                    // TODO: Show Modal
+                                                }}
+                                            >
                                                 <EditIcon />
                                             </IconButton>
-                                            <IconButton aria-label="Delete" style={{ color: "#db3825" }} >
+
+                                            <IconButton
+                                                aria-label="Delete"
+                                                style={{ color: "#db3825" }}
+                                                onClick={() => this.deleteCategory(ele.id)}
+                                            >
                                                 <DeleteIcon />
                                             </IconButton>
-                                            <IconButton aria-label="Share" style={{ color: "#1d70f5" }}>
+
+                                            <IconButton aria-label="Share" style={{ color: "#1d70f5" }} onClick={() => this.shareCategory(ele.slug)}>
                                                 <ShareIcon />
                                             </IconButton>
-                                            {/* <Button size="small" color="primary" href={``}>
-                                                Edit
-                                            </Button> */}
+
                                         </CardActions>
 
                                     </Card>
