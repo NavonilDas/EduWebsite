@@ -8,7 +8,9 @@ class CreateCategory extends React.Component {
         this.state = {
             open: false,
             files: [],
-            category: ""
+            category: "",
+            name: this.props.title || "",
+            error: ""
         };
 
         this.onChange = this.onChange.bind(this);
@@ -40,12 +42,32 @@ class CreateCategory extends React.Component {
     }
 
     onChange(event) {
-        const val = event.target.value;
-        console.log(val);
+        const { name, value } = event.target;
+        const tmp = {};
+        tmp[name] = value;
+        this.setState(tmp);
     }
 
     submit() {
-        // TODO: Call API
+        if (this.state.name === '') {
+            this.setState({
+                error: 'Category Name Can\'t Be Empty!'
+            });
+            return;
+        }
+        const body = {
+            name: this.state.name,
+            file: this.state.files
+        };
+        if (this.props.ID) {
+            body.ID = this.props.ID;
+            // TODO: Update
+        } else {
+            // TODO: Create NEW
+        }
+
+        console.log(body);
+
         if (this.props.onClose) {
             this.props.onClose();
         }
@@ -56,13 +78,28 @@ class CreateCategory extends React.Component {
             <div className="create-category modal">
                 <h1 style={{ marginBottom: "8px" }}>Create Category</h1>
                 <form style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", height: "150px", width: "300px" }}>
-                    <TextField label="Category Name" onChange={this.onChange} />
+                    <TextField
+                        required
+                        error={this.state.error !== ''}
+                        helperText={this.state.error}
+                        name="name"
+                        value={this.state.name}
+                        label="Category Name"
+                        onChange={this.onChange}
+                    />
 
                     <Button onClick={this.handleOpen} variant="contained">
                         Add Thumbnail
                     </Button>
 
-                    <Button variant="contained" color="primary" onClick={this.submit}>Submit</Button>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={this.submit}
+                    >
+                        {(this.props.title) ? 'Update' : `Submit`}
+                    </Button>
+
                 </form>
 
                 <DropzoneDialog
