@@ -188,7 +188,9 @@ class Dashboard extends React.Component {
                     open={this.state.openModal}
                     onClose={this.modalClose}
                 >
-                    <CreateCategory onClose={this.modalClose} ID={this.selectedId} title={this.selectedTitle} />
+                    <div>
+                        <CreateCategory onClose={this.modalClose} ID={this.state.selectedId} title={this.state.selectedTitle} />
+                    </div>
                 </Modal>
 
             </main>
