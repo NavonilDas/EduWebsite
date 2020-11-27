@@ -6,10 +6,35 @@ class PickImage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            open: false,
+            files: [],
             prev: null,
             selected: "",
         };
+        this.handleClose = this.handleClose.bind(this);
+        this.handleSave = this.handleSave.bind(this);
+        this.handleOpen = this.handleOpen.bind(this);
         this.pick = this.pick.bind(this);
+    }
+
+    handleClose() {
+        this.setState({
+            open: false
+        });
+    }
+
+    handleSave(files) {
+        //Saving files to state for further use and closing Modal.
+        this.setState({
+            files: files,
+            open: false
+        });
+    }
+
+    handleOpen() {
+        this.setState({
+            open: true,
+        });
     }
 
     pick() {
@@ -182,6 +207,7 @@ class PickImage extends React.Component {
                         <Button
                             variant="contained"
                             style={{ marginRight: "10px" }}
+                            onClick={this.handleOpen}
                         >
                             Upload
                         </Button>
@@ -190,6 +216,15 @@ class PickImage extends React.Component {
                     </Button>
                     </div>
                 </div>
+
+                <DropzoneDialog
+                    open={this.state.open}
+                    onSave={this.handleSave}
+                    acceptedFiles={['image/jpeg', 'image/png', 'image/bmp']}
+                    showPreviews={true}
+                    maxFileSize={5000000}
+                    onClose={this.handleClose}
+                />
 
             </div >
         );
