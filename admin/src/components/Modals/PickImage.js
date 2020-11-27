@@ -1,6 +1,7 @@
 import { Button } from '@material-ui/core';
 import { DropzoneDialog } from 'material-ui-dropzone';
 import React from 'react';
+import { AtomicBlockUtils } from 'draft-js';
 
 class PickImage extends React.Component {
     constructor(props) {
@@ -15,6 +16,7 @@ class PickImage extends React.Component {
         this.handleSave = this.handleSave.bind(this);
         this.handleOpen = this.handleOpen.bind(this);
         this.pick = this.pick.bind(this);
+        this.addImage = this.addImage.bind(this);
     }
 
     handleClose() {
@@ -37,11 +39,30 @@ class PickImage extends React.Component {
         });
     }
 
+    addImage(location) {
+        if (location && this.props.editorState && this.props.onChange) {
+            const entityData = {
+                src: location,
+                height: "auto",
+                width: "auto"
+            };
+            const entityKey = this.props.editorState
+                .getCurrentContent()
+                .createEntity('IMAGE', 'MUTABLE', entityData)
+                .getLastCreatedEntityKey();
+
+            const newEditorState = AtomicBlockUtils.insertAtomicBlock(
+                this.state.editorState,
+                entityKey,
+                ' '
+            );
+            this.props.onChange(newEditorState);
+        }
+    }
+
     pick() {
         const url = this.state.selected;
-        if (this.props.onPick) {
-            this.props.onPick(url);
-        }
+        this.addImage(url);
         if (this.props.onClose) {
             this.props.onClose();
         }
