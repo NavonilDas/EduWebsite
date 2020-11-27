@@ -158,9 +158,17 @@ class PickImage extends React.Component {
                 <div className="pick-image-gallery row">
                     {images.map((ele, ind) => (
                         <div
-                            className="col-md-2"
+                            className={`col-md-2 ${this.state[`item${ind}`] ? 'selected' : ''}`}
                             key={ind}
                             onClick={() => {
+                                let tmp = {};
+                                tmp[`item${ind}`] = true;
+                                if (this.state.prev) {
+                                    tmp[this.state.prev] = false;
+                                }
+                                tmp['prev'] = `item${ind}`;
+                                tmp['selected'] = ele.url;
+                                this.setState(tmp);
                             }}>
 
                             <img src={`${ele.url}`} alt={`Gallery Item ${ind}`} />
