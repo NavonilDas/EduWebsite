@@ -52,7 +52,7 @@ class PickImage extends React.Component {
                 .getLastCreatedEntityKey();
 
             const newEditorState = AtomicBlockUtils.insertAtomicBlock(
-                this.state.editorState,
+                this.props.editorState,
                 entityKey,
                 ' '
             );
@@ -63,9 +63,11 @@ class PickImage extends React.Component {
     pick() {
         const url = this.state.selected;
         this.addImage(url);
-        if (this.props.onClose) {
-            this.props.onClose();
-        }
+        setTimeout(() => {
+            if (this.props.onClose) {
+                this.props.onClose();
+            }
+        }, 100);
     }
 
     render() {
