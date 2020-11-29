@@ -76,18 +76,22 @@ class Courses extends React.Component {
             <main className="admin-content">
                 <NavBar title="Class Name" />
                 <div className="admin-body">
+
                     <div className="d-flex" style={{ marginBottom: '1em' }}>
                         <h1 style={{ flexGrow: 1 }}>Courses</h1>
                         <Button variant="contained" color="primary" onClick={this.openModal}>
                             Create Course
                         </Button>
                     </div>
+
                     <div className="row">
                         {
                             items.map((ele, ind) => (
-                                <div className="col-md-3" key={`card-${ind}`} style={{ padding: "15px" }}>
+                                <div className="col-md-3" key={`card-${ind}`} style={{ padding: "15px", minWidth: "250px" }}>
                                     <Card>
-                                        <CardActionArea>
+                                        <CardActionArea onClick={() => {
+                                            this.props.history.push(`/course/${ele.id}`);
+                                        }}>
                                             <CardMedia
                                                 className="card-img"
                                                 image={ele.thumbnail}
@@ -105,12 +109,20 @@ class Courses extends React.Component {
                                         </CardActionArea>
 
                                         <CardActions>
-                                            <Button size="small" color="primary">
+                                            <Button size="small" color="primary" style={{ color: "green" }}>
                                                 Share
-                                        </Button>
-                                            <Button size="small" color="primary" href={`/course/${ele.id}`}>
+                                            </Button>
+
+                                            <Button size="small" color="primary">
                                                 Edit
-                                        </Button>
+                                            </Button>
+
+                                            <Button size="small" color="primary" style={{ color: "red" }} onClick={()=>{
+
+                                            }}>
+                                                Delete
+                                            </Button>
+
                                         </CardActions>
                                     </Card>
                                 </div>
