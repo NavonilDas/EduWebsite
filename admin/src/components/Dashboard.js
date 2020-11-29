@@ -131,7 +131,7 @@ class Dashboard extends React.Component {
                     <div className="row">
                         {
                             items.map((ele, ind) => (
-                                <div className="col-md-2" key={`card-${ind}`} style={{ marginBottom: "30px" }}>
+                                <div className="col-md-2" key={`card-${ind}`} style={{ marginBottom: "30px", minWidth: "210px" }}>
                                     <Card>
 
                                         <CardActionArea onClick={() => {
