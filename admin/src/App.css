@@ -1,3 +1,7 @@
+body {
+  background-color: #fafafa;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -59,10 +63,6 @@ a {
   padding: 16px;
 }
 
-.d-flex {
-  display: flex;
-}
-
 .quiz-question-wrapper {
   background: lightgray;
   padding: 10px;
@@ -90,10 +90,43 @@ a {
 
 .content-wrapper {
   max-width: 90%;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
+
 .content-editor {
   background-color: #fff;
-  min-height: 500px;
+  flex: 1;
   padding: 10px;
-  margin-bottom: 10px;
+  position: relative;
+}
+
+.content-editor > div{
+  position: absolute;
+}
+
+.pick-image-gallery {
+  height: 400px;
+  overflow-y: scroll;
+  padding: 15px;
+}
+
+.pick-image-gallery img {
+  max-width: 100%;
+}
+.pick-image-gallery > div {
+  margin: 0.5%;
+  padding: 8px;
+  border: 1px solid black;
+  cursor: pointer;
+  flex: 0 0 15%;
+  max-width: 15%;
+}
+.pick-image-gallery .selected {
+  background-color: rgb(135, 206, 235, 0.5);
+  border: 1px solid rgb(135, 206, 235);
+}
+.pick-image-gallery > div:hover {
+  background: #e3e3e1;
 }

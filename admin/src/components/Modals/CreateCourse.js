@@ -40,6 +40,7 @@ class CreateCourse extends React.Component {
             open: true,
         });
     }
+    
     handleChange(event) {
         const ele = event.target;
         let tmp = {};
@@ -113,20 +114,6 @@ class CreateCourse extends React.Component {
                                 value={this.state.duration}
                             />
                             <label style={{ margin: "auto 0 0 10px", fontSize: "1.5em" }}>Months</label>
-                            {/* <FormControl>
-                                <InputLabel id="demo-simple-select-helper-label">Du</InputLabel>
-                                <Select
-                                    labelId="demo-simple-select-helper-label"
-                                    id="demo-simple-select-helper"
-                                    value={10}>
-                                    <MenuItem value="">
-                                        <em>None</em>
-                                    </MenuItem>
-                                    <MenuItem value={10}>Ten</MenuItem>
-                                    <MenuItem value={20}>Twenty</MenuItem>
-                                    <MenuItem value={30}>Thirty</MenuItem>
-                                </Select>
-                            </FormControl> */}
                         </div>
                         <div>
                             <Button onClick={this.handleOpen} variant="contained">
