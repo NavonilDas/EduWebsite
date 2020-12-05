@@ -9,15 +9,13 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import { Link } from 'react-router-dom';
-// import InboxIcon from '@material-ui/icons/MoveToInbox';
-// import MailIcon from '@material-ui/icons/Mail';
-// Icons
+
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import SupervisedUserCircleIcon from '@material-ui/icons/SupervisedUserCircle';
 import HomeIcon from '@material-ui/icons/Home';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 
-const drawerWidth = 240;
+const drawerWidth = 200;
 
 const style = theme => ({
     drawer: {
@@ -33,31 +31,46 @@ const style = theme => ({
 
 class SideBar extends React.Component {
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            items: []
+        };
+        // console.log();
+    }
+    componentDidMount() {
+        this.setState({
+            items: [
+                {
+                    name: 'Home',
+                    icon: <HomeIcon />,
+                    to: '/',
+                    active: (window.location.pathname === '/')
+                },
+                {
+                    name: 'Users',
+                    icon: <SupervisedUserCircleIcon />,
+                    to: '/users',
+                    active: (window.location.pathname === '/users')
+                },
+                {
+                    name: 'Analytics',
+                    icon: <DashboardIcon />,
+                    to: '/dashboard',
+                    active: (window.location.pathname === '/dashboard')
+                },
+                {
+                    name: 'Profile',
+                    icon: <AccountCircleIcon />,
+                    to: '/profile',
+                    active: (window.location.pathname === '/profile')
+                }
+            ]
+        })
+    }
     render() {
         const { classes } = this.props;
-        const items = [
-            {
-                name: 'Home',
-                icon: <HomeIcon />,
-                to: '/'
-            },
-            {
-                name: 'Users',
-                icon: <SupervisedUserCircleIcon />,
-                to: '/users'
-            },
-            {
-                name: 'Analytics',
-                icon: <DashboardIcon />,
-                to: '/dashboard'
-            },
-            {
-                name: 'Profile',
-                icon: <AccountCircleIcon />,
-                to: '/profile'
-            }
-        ];
-
+        const items = this.state.items;
         return (
             <div>
                 <CssBaseline />
@@ -68,9 +81,9 @@ class SideBar extends React.Component {
                         paper: classes.drawerPaper,
                     }}
                     anchor="left">
-                    <div className={classes.toolbar} >
-                        <Typography variant="h6" noWrap>
-                            Edu+ Admin
+                    <div className={classes.toolbar + ' d-flex'} >
+                        <Typography variant="h6" noWrap style={{ margin: "auto" }}>
+                            Edu Plus
                         </Typography>
                     </div>
                     <Divider />
@@ -78,7 +91,21 @@ class SideBar extends React.Component {
                         {
                             items.map((ele, index) => (
                                 <Link to={ele.to} key={`link-${index}`}>
-                                    <ListItem button key={ele.name}>
+                                    <ListItem
+                                        button
+                                        style={{ color: "#000" }}
+                                        selected={ele.active}
+                                        onClick={() => {
+                                            this.setState({
+                                                items: this.state.items.map((element, j) => {
+                                                    if (j === index) {
+                                                        element.active = true;
+                                                    } else element.active = false;
+                                                    return element;
+                                                })
+                                            })
+                                        }}
+                                    >
                                         <ListItemIcon>
                                             {ele.icon}
                                         </ListItemIcon>
