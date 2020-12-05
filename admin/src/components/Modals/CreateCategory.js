@@ -1,6 +1,9 @@
 import { Button, TextField } from '@material-ui/core';
 import { DropzoneDialog } from 'material-ui-dropzone';
 import React from 'react';
+import axios from 'axios';
+import API from '../../Api';
+const HOST = API.HOST;
 
 class CreateCategory extends React.Component {
     constructor(props) {
@@ -10,7 +13,8 @@ class CreateCategory extends React.Component {
             files: [],
             category: "",
             name: this.props.title || "",
-            error: ""
+            error: "",
+            apiError: ""
         };
 
         this.onChange = this.onChange.bind(this);
@@ -55,28 +59,47 @@ class CreateCategory extends React.Component {
             });
             return;
         }
-        const body = {
-            name: this.state.name,
-            file: this.state.files
+        const body = new FormData();
+        body.append('name', this.state.name);
+
+        if (this.state.files && this.state.files.length > 0) {
+            body.append('icon', this.state.files[0]);
+        }
+
+        const config = {
+            withCredentials: true,
+            headers: {
+                'content-type': 'multipart/form-data'
+            }
         };
+
         if (this.props.ID) {
             body.ID = this.props.ID;
             // TODO: Update
         } else {
-            // TODO: Create NEW
+            axios.post(`${HOST}categories/add`, body, config).then(res => {
+                if (res.data) {
+                    if (res.data.status) {
+                        if (this.props.onClose) {
+                            this.props.onClose();
+                        }
+                    } else {
+                        this.setState({ apiError: res.data.error || 'Something Went Wrong' });
+                    }
+                }
+            }).catch(err => {
+                console.error(err);
+                this.setState({ apiError: 'Something Went Wrong' });
+            });
         }
 
-        console.log(body);
-
-        if (this.props.onClose) {
-            this.props.onClose();
-        }
     }
 
     render() {
         return (
             <div className="create-category modal">
                 <h1 style={{ marginBottom: "8px" }}>Create Category</h1>
+                <span style={{ color: "red" }}>{(this.state.apiError !== "") ? this.state.apiError : ''}</span>
                 <form style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", height: "150px", width: "300px" }}>
                     <TextField
                         required

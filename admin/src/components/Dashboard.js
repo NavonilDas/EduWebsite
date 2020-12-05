@@ -14,6 +14,10 @@ import ShareIcon from '@material-ui/icons/Share';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 
+import axios from 'axios';
+import API from '../Api';
+const HOST = API.HOST;
+
 class Dashboard extends React.Component {
     constructor(props) {
         super(props);
@@ -56,68 +60,7 @@ class Dashboard extends React.Component {
     }
 
     render() {
-        const items = [
-            {
-                id: 'abc',
-                thumbnail: "https://prod-discovery.edx-cdn.org/media/course/image/bb5e9463-0248-4f78-a337-b8bb9d829f2b-a71b8e897830.small.jpeg",
-                title: "Class 7",
-                slug: "programming-in-c"
-            },
-            {
-                id: 'abc',
-                thumbnail: "https://prod-discovery.edx-cdn.org/media/course/image/bb5e9463-0248-4f78-a337-b8bb9d829f2b-a71b8e897830.small.jpeg",
-                title: "Class 8",
-                slug: "programming-in-c"
-            },
-            {
-                id: 'abc',
-                thumbnail: "https://prod-discovery.edx-cdn.org/media/course/image/bb5e9463-0248-4f78-a337-b8bb9d829f2b-a71b8e897830.small.jpeg",
-                title: "Class 9",
-                slug: "programming-in-c"
-            },
-            {
-                id: 'abc',
-                thumbnail: "https://prod-discovery.edx-cdn.org/media/course/image/bb5e9463-0248-4f78-a337-b8bb9d829f2b-a71b8e897830.small.jpeg",
-                title: "Class 10",
-                slug: "programming-in-c"
-            },
-            {
-                id: 'abc',
-                thumbnail: "https://prod-discovery.edx-cdn.org/media/course/image/bb5e9463-0248-4f78-a337-b8bb9d829f2b-a71b8e897830.small.jpeg",
-                title: "Class 12",
-                slug: "programming-in-c"
-            },
-            {
-                id: 'abc',
-                thumbnail: "https://prod-discovery.edx-cdn.org/media/course/image/bb5e9463-0248-4f78-a337-b8bb9d829f2b-a71b8e897830.small.jpeg",
-                title: "Class 7",
-                slug: "programming-in-c"
-            },
-            {
-                id: 'abc',
-                thumbnail: "https://prod-discovery.edx-cdn.org/media/course/image/bb5e9463-0248-4f78-a337-b8bb9d829f2b-a71b8e897830.small.jpeg",
-                title: "Class 8",
-                slug: "programming-in-c"
-            },
-            {
-                id: 'abc',
-                thumbnail: "https://prod-discovery.edx-cdn.org/media/course/image/bb5e9463-0248-4f78-a337-b8bb9d829f2b-a71b8e897830.small.jpeg",
-                title: "Class 9",
-                slug: "programming-in-c"
-            },
-            {
-                id: 'abc',
-                thumbnail: "https://prod-discovery.edx-cdn.org/media/course/image/bb5e9463-0248-4f78-a337-b8bb9d829f2b-a71b8e897830.small.jpeg",
-                title: "Class 10",
-                slug: "programming-in-c"
-            },
-            {
-                id: 'abc',
-                thumbnail: "https://prod-discovery.edx-cdn.org/media/course/image/bb5e9463-0248-4f78-a337-b8bb9d829f2b-a71b8e897830.small.jpeg",
-                title: "Class 12",
-                slug: "programming-in-c"
-            },
-        ];
+        const items = this.state.items;
         return (
             <main className="admin-content">
                 <NavBar title="Home" />
