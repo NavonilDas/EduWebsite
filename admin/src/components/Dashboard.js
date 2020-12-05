@@ -41,7 +41,6 @@ class Dashboard extends React.Component {
             selectedId: null,
             selectedTitle: null
         });
-        this.componentDidMount();
     }
 
     openModal() {
@@ -155,7 +154,7 @@ class Dashboard extends React.Component {
                     onClose={this.modalClose}
                 >
                     <div>
-                        <CreateCategory onClose={this.modalClose} ID={this.state.selectedId} title={this.state.selectedTitle} />
+                        <CreateCategory onUpdate={this.componentDidMount} ID={this.state.selectedId} title={this.state.selectedTitle} />
                     </div>
                 </Modal>
 

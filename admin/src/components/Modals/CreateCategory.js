@@ -72,27 +72,27 @@ class CreateCategory extends React.Component {
                 'content-type': 'multipart/form-data'
             }
         };
-
+        let request;
         if (this.props.ID) {
-            body.ID = this.props.ID;
-            // TODO: Update
+            request = axios.put(`${HOST}categories/${this.props.ID}`, body, config);
         } else {
-            axios.post(`${HOST}categories/add`, body, config).then(res => {
-                if (res.data) {
-                    if (res.data.status) {
-                        if (this.props.onClose) {
-                            this.props.onClose();
-                        }
-                    } else {
-                        this.setState({ apiError: res.data.error || 'Something Went Wrong' });
-                    }
-                }
-            }).catch(err => {
-                console.error(err);
-                this.setState({ apiError: 'Something Went Wrong' });
-            });
+            request = axios.post(`${HOST}categories/add`, body, config);
         }
-
+        
+        request.then(res => {
+            if (res.data) {
+                if (res.data.status) {
+                    if (this.props.onUpdate) {
+                        this.props.onUpdate();
+                    }
+                } else {
+                    this.setState({ apiError: res.data.error || 'Something Went Wrong' });
+                }
+            }
+        }).catch(err => {
+            console.error(err);
+            this.setState({ apiError: '' + err });
+        });
     }
 
     render() {
