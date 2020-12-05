@@ -1,6 +1,9 @@
 import { Button, Card, CardContent, TextField } from '@material-ui/core';
 import React from 'react';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import axios from 'axios';
+import API from '../Api';
+const HOST = API.HOST;
 
 class Login extends React.Component {
     constructor(props) {
@@ -33,9 +36,20 @@ class Login extends React.Component {
         }
         const body = {
             username: this.state.username,
-            pass: this.state.password
+            password: this.state.password
         };
         console.log(body);
+        axios.post(`${HOST}users/admin/login`, body, { headers: {} })
+            .then(res => {
+                if (res.data && res.data.token) {
+                    document.cookie = `ID=${res.data.token}`;
+                    if (this.props.onLogin) {
+                        this.props.onLogin();
+                    }
+                }
+            })
+            .catch(err => console.error(err));
+
         // TODO: Do a Post Request
     }
 

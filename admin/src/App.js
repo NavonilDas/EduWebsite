@@ -13,16 +13,34 @@ import Users from './components/Users';
 import Courses from './components/Courses';
 import AddContent from './components/AddContent';
 
+import axios from 'axios';
+import API from './Api';
+const HOST = API.HOST;
+
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isLogin: true
+      isLogin: false
     };
+    this.onLogin = this.onLogin.bind(this);
   }
-  
+
   componentDidMount() {
-    // TODO: Request
+    this.onLogin();
+  }
+
+  onLogin() {
+    axios.post(`${HOST}users/verify`, {}, {
+      withCredentials: true,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    }).then(res => {
+      if (res.data.sucess && res.data.admin) {
+        this.setState({ isLogin: true });
+      }
+    }).catch(err => console.error(err));
   }
 
   dashboard() {
@@ -49,7 +67,7 @@ class App extends React.Component {
   render() {
     return (
       <div className="App">
-        { this.state.isLogin ? this.dashboard() : <Login />}
+        { this.state.isLogin ? this.dashboard() : <Login onLogin={this.onLogin} />}
       </div>
     );
   }
