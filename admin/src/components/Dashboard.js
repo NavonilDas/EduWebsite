@@ -16,7 +16,7 @@ import EditIcon from '@material-ui/icons/Edit';
 
 import axios from 'axios';
 import API from '../Api';
-const HOST = API.HOST;
+const { HOST, IMG } = API;
 
 class Dashboard extends React.Component {
     constructor(props) {
@@ -25,7 +25,8 @@ class Dashboard extends React.Component {
             openModal: false,
             items: [],
             selectedTitle: null,
-            selectedId: null
+            selectedId: null,
+            apiError: ""
         };
 
         this.openModal = this.openModal.bind(this);
@@ -40,6 +41,7 @@ class Dashboard extends React.Component {
             selectedId: null,
             selectedTitle: null
         });
+        this.componentDidMount();
     }
 
     openModal() {
@@ -47,8 +49,19 @@ class Dashboard extends React.Component {
     }
 
     deleteCategory(id) {
-        // TODO: Request API
-
+        axios.delete(`${HOST}categories/${id}`, { withCredentials: true })
+            .then(res => {
+                if (res.data.error) {
+                    this.setState({ apiError: res.data.error });
+                }
+                if (res.data.status) {
+                    this.setState({ items: this.state.items.filter((ele) => ele._id !== id) });
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                this.setState({ apiError: '' + err });
+            });
     }
 
     shareCategory(slug) {
@@ -56,7 +69,16 @@ class Dashboard extends React.Component {
     }
 
     componentDidMount() {
-        // TODO: Request Categories
+        axios.get(`${HOST}categories`)
+            .then(res => {
+                if (res.data) {
+                    this.setState({ items: res.data });
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                this.setState({ apiError: '' + err });
+            });
     }
 
     render() {
@@ -71,6 +93,7 @@ class Dashboard extends React.Component {
                             Create Category
                         </Button>
                     </div>
+                    <span style={{ color: "red" }}>{(this.state.apiError) ? this.state.apiError : ''}</span>
                     <div className="row">
                         {
                             items.map((ele, ind) => (
@@ -78,16 +101,16 @@ class Dashboard extends React.Component {
                                     <Card>
 
                                         <CardActionArea onClick={() => {
-                                            this.props.history.push(`/category/${ele.id}`);
+                                            this.props.history.push(`/category/${ele._id}`);
                                         }}>
                                             <CardMedia
                                                 className="card-img"
-                                                image={ele.thumbnail}
-                                                title={ele.title}
+                                                image={`${IMG}${ele.icon}`}
+                                                title={ele.name}
                                             />
                                             <CardContent style={{ paddingBottom: 0 }}>
                                                 <Typography gutterBottom variant="h5" component="h2">
-                                                    {ele.title}
+                                                    {ele.name}
                                                 </Typography>
                                             </CardContent>
                                         </CardActionArea>
@@ -98,8 +121,8 @@ class Dashboard extends React.Component {
                                                 onClick={() => {
                                                     this.setState({
                                                         openModal: true,
-                                                        selectedId: ele.id,
-                                                        selectedTitle: ele.title
+                                                        selectedId: ele._id,
+                                                        selectedTitle: ele.name
                                                     });
                                                 }}
                                             >
@@ -109,7 +132,7 @@ class Dashboard extends React.Component {
                                             <IconButton
                                                 aria-label="Delete"
                                                 style={{ color: "#db3825" }}
-                                                onClick={() => this.deleteCategory(ele.id)}
+                                                onClick={() => this.deleteCategory(ele._id)}
                                             >
                                                 <DeleteIcon />
                                             </IconButton>
