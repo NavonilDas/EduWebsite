@@ -36,8 +36,8 @@ class SideBar extends React.Component {
         this.state = {
             items: []
         };
-        // console.log();
     }
+
     componentDidMount() {
         this.setState({
             items: [
@@ -68,6 +68,7 @@ class SideBar extends React.Component {
             ]
         })
     }
+
     render() {
         const { classes } = this.props;
         const items = this.state.items;

@@ -130,3 +130,8 @@ a {
 .pick-image-gallery > div:hover {
   background: #e3e3e1;
 }
+
+.errorText {
+  color: red;
+  font-size: 1.5em;
+}

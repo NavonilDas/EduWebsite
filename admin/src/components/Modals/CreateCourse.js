@@ -2,6 +2,11 @@ import { Button, Checkbox, FormControlLabel, TextField } from '@material-ui/core
 import { DropzoneDialog } from 'material-ui-dropzone';
 import React from 'react';
 
+import axios from 'axios';
+import API from '../../Api';
+const HOST = API.HOST;
+
+
 class CreateCourse extends React.Component {
     constructor(props) {
         super(props);
@@ -9,10 +14,14 @@ class CreateCourse extends React.Component {
             open: false,
             files: [],
             title: "",
+            titleError: "",
             description: "",
-            isPaid: true,
-            price: 0,
-            duration: 10
+            // isPaid: true,
+            price: 1,
+            priceError: "",
+            duration: 10,
+            durationError: "",
+            apiError: ""
         };
         this.handleClose = this.handleClose.bind(this);
         this.handleSave = this.handleSave.bind(this);
@@ -40,7 +49,7 @@ class CreateCourse extends React.Component {
             open: true,
         });
     }
-    
+
     handleChange(event) {
         const ele = event.target;
         let tmp = {};
@@ -52,11 +61,53 @@ class CreateCourse extends React.Component {
         this.setState(tmp);
     }
     submit() {
-        // TODO: API Request
-        console.log(this.state);
-        if (this.props.onClose) {
-            this.props.onClose();
+        if (!this.props.categoryID) return;
+
+        if (this.state.title === "") {
+            return this.setState({ titleError: 'Title Can\'t Be Empty' });
         }
+
+        if (this.state.price <= 0 || isNaN(parseInt(this.state.price))) {
+            return this.setState({ priceError: 'Price is Invalid' });
+        }
+
+        if (this.state.duration <= 0 || isNaN(parseInt(this.state.duration))) {
+            return this.setState({ priceError: 'Duration is Invalid' });
+        }
+
+
+        const body = new FormData();
+        body.append('name', this.state.title);
+        body.append('description', this.state.description);
+        body.append('duration', this.state.duration);
+        body.append('price', this.state.price);
+        if (this.state.files.length > 0) {
+            body.append('thumbnail', this.state.files[0]);
+        }
+
+        const config = {
+            withCredentials: true,
+            headers: {
+                'content-type': 'multipart/form-data'
+            }
+        };
+
+        axios.post(`${HOST}courses/add/${this.props.categoryID}`, body, config)
+            .then(res => {
+                if (res.data) {
+                    if (this.props.onUpdate) {
+                        this.props.onUpdate();
+                    }
+                }
+            })
+            .catch(err => {
+                if (err.response && err.response.data && err.response.data.error) {
+                    this.setState({ apiError: 'Error :  ' + err.response.data.error });
+                } else {
+                    this.setState({ apiError: '' + err });
+                }
+            });
+
     }
 
     render() {
@@ -64,10 +115,15 @@ class CreateCourse extends React.Component {
             <main className="create-course modal">
                 <h1>Create Course</h1>
                 <div>
+
+                    <span className="errorText">{(this.state.apiError) ? this.state.apiError : ''}</span>
+
                     <form className="course-form" style={{ width: "300px" }}>
                         <TextField
                             required
                             name="title"
+                            error={this.state.titleError !== ""}
+                            helperText={this.state.titleError}
                             id="course-title"
                             label="Course Title"
                             value={this.state.title}
@@ -85,7 +141,7 @@ class CreateCourse extends React.Component {
                             onChange={this.handleChange}
                         />
 
-                        <FormControlLabel
+                        {/* <FormControlLabel
                             control={
                                 <Checkbox
                                     name="checkedB"
@@ -95,20 +151,38 @@ class CreateCourse extends React.Component {
                             checked={this.state.isPaid}
                             onChange={this.handleChange}
                             label="Is Paid"
-                        />
+                        /> */}
+
+
                         <TextField
                             id="filled-number"
                             label="Price"
                             type="number"
                             name="price"
+                            error={this.state.priceError !== ""}
+                            helperText={this.state.priceError}
+                            InputProps={{
+                                inputProps: {
+                                    min: 1
+                                }
+                            }}
                             value={this.state.price}
                             onChange={this.handleChange}
                         />
+
                         <div className="d-flex">
                             <TextField
                                 id="filled-number"
                                 label="Course Duration"
+                                style={{ flex: 1 }}
+                                error={this.state.durationError !== ""}
+                                helperText={this.state.durationError}
                                 type="number"
+                                InputProps={{
+                                    inputProps: {
+                                        min: 1
+                                    }
+                                }}
                                 name="duration"
                                 onChange={this.handleChange}
                                 value={this.state.duration}

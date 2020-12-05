@@ -92,7 +92,7 @@ class Dashboard extends React.Component {
                             Create Category
                         </Button>
                     </div>
-                    <span style={{ color: "red" }}>{(this.state.apiError) ? this.state.apiError : ''}</span>
+                    <span className="errorText">{(this.state.apiError) ? this.state.apiError : ''}</span>
                     <div className="row">
                         {
                             items.map((ele, ind) => (
