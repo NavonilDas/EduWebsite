@@ -17,6 +17,7 @@ import CreateChapter from './Modals/CreateChapter';
 
 import axios from 'axios';
 import API from '../Api';
+import CreateTest from './Modals/CreateTest';
 const HOST = API.HOST;
 
 class ViewCourse extends React.Component {
@@ -38,7 +39,7 @@ class ViewCourse extends React.Component {
             openModal: false,
             apiError: "",
             selected: null,
-            apiError: ""
+            openTest: false
         };
 
         this.save_btn = React.createRef();
@@ -52,7 +53,7 @@ class ViewCourse extends React.Component {
     }
 
     modalClose() {
-        this.setState({ openModal: false, selected: null });
+        this.setState({ openModal: false, selected: null, openTest: false });
     }
 
     openModal() {
@@ -150,7 +151,7 @@ class ViewCourse extends React.Component {
                             variant="contained"
                             style={{ backgroundColor: "#097d01", marginLeft: "1em", marginRight: "1em" }}
                             color="primary"
-                            onClick={() => this.props.history.push(`/create/quiz?course=${this.state.course_id}`)}
+                            onClick={() => this.setState({ openTest: true, openModal: true })}
                         >
                             Add Test
                         </Button>
@@ -234,13 +235,24 @@ class ViewCourse extends React.Component {
                     onClose={this.modalClose}
                 >
                     <div>
-                        <CreateChapter
-                            selected={this.state.selected}
-                            courseID={this.state.course_id}
-                            onUpdate={this.update}
-                            modal="true"
-                            position={this.state.items.length}
-                        />
+
+                        {(this.state.openTest) ?
+                            (
+                                <CreateTest />
+                            )
+                            :
+                            (
+                                <CreateChapter
+                                    selected={this.state.selected}
+                                    courseID={this.state.course_id}
+                                    onUpdate={this.update}
+                                    modal="true"
+                                    position={this.state.items.length}
+                                />
+
+                            )
+                        }
+
                     </div>
                 </Modal>
 

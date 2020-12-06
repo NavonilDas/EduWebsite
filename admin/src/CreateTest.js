@@ -6,17 +6,33 @@ import NavBar from './components/NavBar';
 class CreateTest extends React.Component {
     constructor(props) {
         super(props);
+        let course_id = null, chapter_id = null, test_id = null;
+
+        if (this.props?.location?.search) {
+            const params = new URLSearchParams(this.props.location.search);
+            course_id = params.get('course')
+            chapter_id = params.get('chapter')
+            test_id = params.get('test')
+        }
+
+
         this.state = {
+            course_id,
+            chapter_id,
+            test_id,
             testName: "Create Test",
-            openModal: false
+            openModal: false,
+            questions: []
         };
+
         this.openModal = this.openModal.bind(this);
         this.modalClose = this.modalClose.bind(this);
         this.deleteQuestion = this.deleteQuestion.bind(this);
     }
     componentDidMount() {
-        const chapterid = null;
-        const courseid = null;
+        if(this.state.test_id){
+            // Test is already Created
+        }
     }
 
     modalClose() {
@@ -59,6 +75,10 @@ class CreateTest extends React.Component {
                             Add
                         </Button>
                     </div>
+
+                    <form>
+                        
+                    </form>
 
                     <List>
                         {questions.map((ele, ind) => (

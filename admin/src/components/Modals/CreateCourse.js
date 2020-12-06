@@ -1,4 +1,4 @@
-import { Button, Checkbox, FormControlLabel, TextField } from '@material-ui/core';
+import { Button, TextField } from '@material-ui/core';
 import { DropzoneDialog } from 'material-ui-dropzone';
 import React from 'react';
 
