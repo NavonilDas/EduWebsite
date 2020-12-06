@@ -29,7 +29,8 @@ class Courses extends React.Component {
             catName,
             openModal: false,
             items: [],
-            apiError: ""
+            apiError: "",
+            selected: null
         };
 
         this.openModal = this.openModal.bind(this);
@@ -41,7 +42,7 @@ class Courses extends React.Component {
     }
 
     modalClose() {
-        this.setState({ openModal: false });
+        this.setState({ openModal: false, selected: null });
     }
 
     openModal() {
@@ -68,7 +69,10 @@ class Courses extends React.Component {
     }
 
     editCourse(item) {
-
+        this.setState({
+            openModal: true,
+            selected: item
+        });
     }
 
     shareCourse(item) {
@@ -76,7 +80,7 @@ class Courses extends React.Component {
     }
 
     update() {
-        this.setState({ openModal: false });
+        this.setState({ openModal: false, selected: null });
         axios.get(`${HOST}courses/${this.state.category_id}`)
             .then(res => {
                 this.setState({
@@ -113,15 +117,15 @@ class Courses extends React.Component {
 
                     <span className="errorText">{(this.state.apiError) ? this.state.apiError : ''}</span>
 
+                    {(this.state.items.length <= 0) ? (<p>No Courses Available</p>) : ''}
 
                     <div className="row">
-                        {(this.state.items.length <= 0) ? (<p>No Courses Available</p>) : ''}
                         {
                             items.map((ele, ind) => (
                                 <div className="col-md-3" key={`card-${ind}`} style={{ padding: "15px", minWidth: "250px" }}>
                                     <Card>
                                         <CardActionArea onClick={() => {
-                                            this.props.history.push(`/course/${ele._id}`);
+                                            this.props.history.push(`/course/${ele._id}?name=${ele.name}`);
                                         }}>
                                             <CardMedia
                                                 className="card-img"
@@ -179,7 +183,7 @@ class Courses extends React.Component {
                     onClose={this.modalClose}
                 >
                     <div>
-                        <CreateCourse onUpdate={this.update} categoryID={this.state.category_id} />
+                        <CreateCourse item={this.state.selected} onUpdate={this.update} categoryID={this.state.category_id} />
                     </div>
                 </Modal>
 

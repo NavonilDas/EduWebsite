@@ -13,13 +13,13 @@ class CreateCourse extends React.Component {
         this.state = {
             open: false,
             files: [],
-            title: "",
+            title: (this.props.item) ? this.props.item.name : "",
             titleError: "",
-            description: "",
+            description: (this.props.item) ? this.props.item.description : "",
             // isPaid: true,
-            price: 1,
+            price: (this.props.item) ? this.props.item.price : 1,
             priceError: "",
-            duration: 10,
+            duration: (this.props.item) ? this.props.item.duration : 10,
             durationError: "",
             apiError: ""
         };
@@ -92,7 +92,14 @@ class CreateCourse extends React.Component {
             }
         };
 
-        axios.post(`${HOST}courses/add/${this.props.categoryID}`, body, config)
+        let request = null
+        if (this.props.item) {
+            request = axios.put(`${HOST}courses/${this.props.item._id}`, body, config)
+        } else {
+            request = axios.post(`${HOST}courses/add/${this.props.categoryID}`, body, config);
+        }
+
+        request
             .then(res => {
                 if (res.data) {
                     if (this.props.onUpdate) {
