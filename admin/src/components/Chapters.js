@@ -1,30 +1,48 @@
-import { Button, IconButton, Modal } from '@material-ui/core';
+import { Button, IconButton, ListItem, ListItemIcon, ListItemText, List, Modal } from '@material-ui/core';
 import React from 'react';
 import NavBar from './NavBar';
 import $ from 'jquery';
 import 'jquery-ui';
 import 'jquery-ui/ui/widgets/sortable';
 import 'jquery-ui/ui/disable-selection';
-import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled';
+
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
-import CreateChapter from './Modals/CreateChapter';
 import AddVideo from './Modals/AddVideo';
 import AddMedia from './Modals/AddMedia';
 
+import ContactSupportIcon from '@material-ui/icons/ContactSupport'; // Quiz
+import MenuBookIcon from '@material-ui/icons/MenuBook'; // TOPIC
+import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled'; // Video
+import WebAssetIcon from '@material-ui/icons/WebAsset'; // Media
+
+import axios from 'axios';
+import API from '../Api';
+const { HOST } = API;
 
 class Chapters extends React.Component {
     constructor(props) {
         super(props);
+
+        let chapName = null;
+        if (this.props?.location?.search) {
+            const params = new URLSearchParams(this.props.location.search);
+            chapName = params.get('name');
+        }
+
         this.state = {
-            chapterId: this.props.match.params.id || -1,
+            chapterId: this.props.match.params.id,
+            chapName,
             openModal: false,
             addVideo: false,
-            addMedia: false
+            addMedia: false,
+            items: [],
+            apiError: ""
         };
 
         this.openModal = this.openModal.bind(this);
         this.modalClose = this.modalClose.bind(this);
+        this.update = this.update.bind(this);
     }
 
     modalClose() {
@@ -36,23 +54,50 @@ class Chapters extends React.Component {
     }
 
     componentDidMount() {
+        this.update();
         $("#chapter-list").sortable({
         }).disableSelection();
     }
 
+    update() {
+        this.setState({ openModal: false, addMedia: false, addVideo: false });
+        axios.get(`${HOST}content/chapter/${this.state.chapterId}`)
+            .then(res => {
+                if (res.data) {
+                    this.setState({
+                        items: res.data.sort((a, b) => (+a.position) - (+b.position))
+                    });
+                }
+            })
+            .catch(err => {
+                if (err.response && err.response.data && err.response.data.error) {
+                    this.setState({ apiError: 'Error: ' + err.response.data.error });
+                } else {
+                    this.setState({ apiError: '' + err });
+                }
+                console.error(err);
+            });
+    }
+
     render() {
+        // const items = this.state.items;
+        const items = this.state.items;
         return (
             <main className="admin-content">
-                <NavBar title="Chapter" />
-                <div className="admin-body">
 
-                    <CreateChapter chapterName="ABC" chapterDescription="Hello World" chapterID="10" />
+                <NavBar title={(this.state.chapName) ? this.state.chapName : 'Chapter Name'} />
+
+                <div className="admin-body">
 
                     <div className="d-flex" style={{ marginTop: "10px" }}>
                         <h2 style={{ flexGrow: 1 }}>Contents</h2>
-                        <Button variant="contained" color="primary" onClick={() => {
-                            this.props.history.push(`/content/${this.state.chapterId}`);
-                        }}>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={() => {
+                                this.props.history.push(`/content/${this.state.chapterId}`);
+                            }}
+                        >
                             Add Content
                         </Button>
 
@@ -93,21 +138,37 @@ class Chapters extends React.Component {
                         >
                             Add Media
                         </Button>
-                        
+
                     </div>
-                    <ul id="chapter-list" className="sortable" style={{ marginBottom: "10em" }}>
-                        {['1', '2', '3', '4', '5', '6'].map((ele, i) => (
-                            <li key={i}>
-                                <PlayCircleFilledIcon /> Content {i + 1}
-                                <IconButton aria-label="Edit" href={`/create/chapter?id=${ele.id}`}>
-                                    <EditIcon />
-                                </IconButton>
-                                <IconButton style={{ color: "#db3825" }} aria-label="Delete" onClick={this.delete}>
-                                    <DeleteIcon />
-                                </IconButton>
-                            </li>
+
+                    <span className="errorText">{(this.state.apiError) ? this.state.apiError : ''}</span>
+
+                    {(this.state.items.length <= 0) ? (<p>No Courses Available</p>) : ''}
+
+
+                    <List id="chapter-list" className="sortable" style={{ marginBottom: "10em" }}>
+                        {items.map((ele, i) => (
+                            <div key={i}>
+                                <ListItem
+                                    button
+                                >
+                                    <ListItemIcon>
+                                        {(ele.video) ? <PlayCircleFilledIcon /> : ((ele.media) ? <WebAssetIcon /> : ((ele.quiz) ? <ContactSupportIcon /> : <MenuBookIcon />))}
+                                    </ListItemIcon>
+                                    <ListItemText primary={ele.title} />
+                                    <IconButton aria-label="Edit" href={`/create/chapter?id=${ele.id}`}>
+                                        <EditIcon />
+                                    </IconButton>
+                                    <IconButton style={{ color: "#db3825" }} aria-label="Delete" onClick={this.delete}>
+                                        <DeleteIcon />
+                                    </IconButton>
+
+                                </ListItem>
+
+
+                            </div>
                         ))}
-                    </ul>
+                    </List>
                 </div>
 
                 <Modal
@@ -115,7 +176,7 @@ class Chapters extends React.Component {
                     onClose={this.modalClose}
                 >
                     <div>
-                        {(this.state.addVideo) ? <AddVideo onSubmit={this.modalClose} chapterID={this.state.chapterId} /> : ''}
+                        {(this.state.addVideo) ? <AddVideo onUpdate={this.update} chapterID={this.state.chapterId} position={this.state.items.length} /> : ''}
                         {(this.state.addMedia) ? <AddMedia onSubmit={this.modalClose} chapterID={this.state.chapterId} /> : ''}
                     </div>
                 </Modal>
