@@ -1,15 +1,19 @@
 import { Button, TextField } from '@material-ui/core';
 import React from 'react';
 
+import axios from 'axios';
+import API from '../../Api';
+const HOST = API.HOST;
+
 
 class CreateTest extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            title: (this.props.item) ? this.props.item.name : "",
+            title: (this.props.selected) ? this.props.selected.name : "",
             titleError: "",
-            description: (this.props.item) ? this.props.item.description : "",
-            duration: (this.props.item) ? this.props.item.duration : 10,
+            description: (this.props.selected) ? this.props.selected.description : "",
+            duration: (this.props.selected) ? this.props.selected.duration : 10,
             durationError: "",
             apiError: ""
         };
@@ -28,7 +32,7 @@ class CreateTest extends React.Component {
         this.setState(tmp);
     }
     submit() {
-        if (!this.props.categoryID) return;
+        if (!this.props.courseID) return;
 
         if (this.state.title === "") {
             return this.setState({ titleError: 'Title Can\'t Be Empty' });
@@ -39,16 +43,41 @@ class CreateTest extends React.Component {
         }
 
 
-        const body = new FormData();
-        body.append('title', this.state.title);
-        body.append('description', this.state.description);
-
+        // const body = new FormData();
+        // body.append('title', this.state.title);
+        // body.append('description', this.state.description);
+        // body.append('duration', this.state.duration);
+        const body = {
+            title: this.state.title,
+            description: this.state.description,
+            duration: this.state.duration,
+            course_id: this.props.courseID
+        };
         const config = {
             withCredentials: true,
-            headers: {
-                'content-type': 'multipart/form-data'
-            }
         };
+
+        let request = null
+        if (this.props.selected) {
+        } else {
+            request = axios.post(`${HOST}test/create`, body, config);
+        }
+
+        request
+            .then(res => {
+                if (res.data) {
+                    if (this.props.onUpdate) {
+                        this.props.onUpdate();
+                    }
+                }
+            })
+            .catch(err => {
+                if (err.response && err.response.data && err.response.data.error) {
+                    this.setState({ apiError: 'Error :  ' + err.response.data.error });
+                } else {
+                    this.setState({ apiError: '' + err });
+                }
+            });
 
     }
 

@@ -61,12 +61,10 @@ class ViewCourse extends React.Component {
     }
 
     change(event, ui) {
-        // console.log(ui);
         if (this.save_btn?.current) {
             console.log(this.save_btn);
             this.setState({ saveChanges: true });
         }
-        // this.save_btn.current.disabled = false;
     }
 
     componentDidMount() {
@@ -112,8 +110,8 @@ class ViewCourse extends React.Component {
 
     expandDetail(eve, id, index) {
         eve.stopPropagation();
-        // TODO: find using id
-        console.log('hello')
+
+        // TODO: Request API
         this.setState({
             items: this.state.items.map((ele, i) => {
                 if (i === index) {
@@ -238,7 +236,13 @@ class ViewCourse extends React.Component {
 
                         {(this.state.openTest) ?
                             (
-                                <CreateTest />
+                                <CreateTest
+                                    selected={this.state.selected}
+                                    courseID={this.state.course_id}
+                                    onUpdate={this.update}
+                                    modal="true"
+                                    position={this.state.items.length}
+                                />
                             )
                             :
                             (
