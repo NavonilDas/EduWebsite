@@ -49,7 +49,22 @@ class Courses extends React.Component {
     }
 
     deleteCourse(id) {
-
+        if (!id) return;
+        axios.delete(`${HOST}courses/${id}`, { withCredentials: true })
+            .then(res => {
+                if (res.data) {
+                    this.setState({
+                        items: this.state.items.filter((ele) => ele._id !== id)
+                    });
+                }
+            })
+            .catch(err => {
+                if (err.response && err.response.data && err.response.data.error) {
+                    this.setState({ apiError: 'Error :  ' + err.response.data.error });
+                } else {
+                    this.setState({ apiError: '' + err });
+                }
+            });
     }
 
     editCourse(item) {
@@ -100,6 +115,7 @@ class Courses extends React.Component {
 
 
                     <div className="row">
+                        {(this.state.items.length <= 0) ? (<p>No Courses Available</p>) : ''}
                         {
                             items.map((ele, ind) => (
                                 <div className="col-md-3" key={`card-${ind}`} style={{ padding: "15px", minWidth: "250px" }}>
