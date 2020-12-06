@@ -1,6 +1,11 @@
 import { Button, TextField } from '@material-ui/core';
 import React from 'react';
 
+import axios from 'axios';
+import API from '../../Api';
+const HOST = API.HOST;
+
+
 class AddVideo extends React.Component {
     constructor(props) {
         super(props);
@@ -9,6 +14,7 @@ class AddVideo extends React.Component {
             link: "",
             linkError: "",
             titleError: "",
+            apiError: ""
         };
         this.handleChange = this.handleChange.bind(this);
         this.submit = this.submit.bind(this);
@@ -20,6 +26,7 @@ class AddVideo extends React.Component {
         tmp[name] = value;
         this.setState(tmp);
     }
+
     extractID(url) {
         /**
         Supported URL
@@ -53,23 +60,43 @@ class AddVideo extends React.Component {
             return;
         }
 
-        // TODO: ADD Video TO DB
         const body = {
-            chapterID: this.props.chapterID,
             title: this.state.title,
-            vid
+            vid,
+            position: this.props.position
         };
-        console.log(body);
 
-        if (this.props.onSubmit) {
-            this.props.onSubmit();
+        let request = null
+        if (this.props.selected) {
+            // TODO: Update
+        } else {
+            request = axios.post(`${HOST}videos/add/${this.props.chapterID}`, body, { withCredentials: true });
         }
+
+        request
+            .then(res => {
+                if (res.data) {
+                    if (this.props.onUpdate) {
+                        this.props.onUpdate();
+                    }
+                }
+            })
+            .catch(err => {
+                if (err.response && err.response.data && err.response.data.error) {
+                    this.setState({ apiError: 'Error :  ' + err.response.data.error });
+                } else {
+                    this.setState({ apiError: '' + err });
+                }
+            });
     }
 
     render() {
         return (
             <div className="add-video modal d-flex flex-column">
                 <h1>Add Video</h1>
+
+                <span className="errorText">{(this.state.apiError) ? this.state.apiError : ''}</span>
+
                 <TextField
                     required
                     error={(this.state.titleError !== "")}
