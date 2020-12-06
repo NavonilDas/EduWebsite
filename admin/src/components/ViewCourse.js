@@ -78,8 +78,33 @@ class ViewCourse extends React.Component {
         });
     }
 
-    delete(eve, id) {
+    delete(eve, ele) {
         eve.stopPropagation();
+        // TODO: Ask Confirmation
+        let request = null;
+        if (ele.name) {
+            // Delete Chapter
+            request = axios.delete(`${HOST}chapters/${ele._id}`, { withCredentials: true });
+        } else {
+            // Delete Quiz
+            request = axios.delete(`${HOST}test/${ele._id}`, { withCredentials: true });
+        }
+        request
+            .then(res => {
+                if (res.data) {
+                    this.setState({
+                        items: this.state.items.filter(item => item._id !== ele._id)
+                    });
+                }
+            })
+            .catch(err => {
+                if (err.response && err.response.data && err.response.data.error) {
+                    this.setState({ apiError: 'Error :  ' + err.response.data.error });
+                } else {
+                    this.setState({ apiError: '' + err });
+                }
+            });
+
     }
 
     editChapter(eve, ele) {
@@ -200,7 +225,7 @@ class ViewCourse extends React.Component {
                                         <IconButton
                                             style={{ color: "#db3825" }}
                                             aria-label="Delete"
-                                            onClick={eve => this.delete(eve, ele._id)}
+                                            onClick={eve => this.delete(eve, ele)}
                                         >
                                             <DeleteIcon />
                                         </IconButton>
