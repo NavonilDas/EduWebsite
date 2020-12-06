@@ -100,7 +100,7 @@ class Dashboard extends React.Component {
                                     <Card>
 
                                         <CardActionArea onClick={() => {
-                                            this.props.history.push(`/category/${ele._id}`);
+                                            this.props.history.push(`/category/${ele._id}?name=${ele.name}`);
                                         }}>
                                             <CardMedia
                                                 className="card-img"

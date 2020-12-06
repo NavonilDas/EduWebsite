@@ -42,7 +42,10 @@ class Login extends React.Component {
         axios.post(`${HOST}users/admin/login`, body, { headers: {} })
             .then(res => {
                 if (res.data && res.data.token) {
-                    document.cookie = `ID=${res.data.token}`;
+                    const expire = new Date();
+                    expire.setTime(expire.getTime() + 5 * 60 * 60 * 1000); // 5hrs
+                    document.cookie = `ID=${res.data.token}; expires=${expire.toUTCString()}; path=/`;
+
                     if (this.props.onLogin) {
                         this.props.onLogin();
                     }

@@ -10,16 +10,34 @@ import Typography from '@material-ui/core/Typography';
 import CreateCourse from './Modals/CreateCourse';
 import { Modal } from '@material-ui/core';
 
+import axios from 'axios';
+import API from '../Api';
+const { HOST, IMG } = API;
+
+
 class Courses extends React.Component {
     constructor(props) {
         super(props);
-        this.category_id = this.props.match.params.id;
+        let catName = null;
+        if (this.props?.location?.search) {
+            const params = new URLSearchParams(this.props.location.search);
+            catName = params.get('name');
+        }
+        // console.log(this.props.location.search);
         this.state = {
-            openModal: false
+            category_id: this.props.match.params.id,
+            catName,
+            openModal: false,
+            items: [],
+            apiError: ""
         };
 
         this.openModal = this.openModal.bind(this);
         this.modalClose = this.modalClose.bind(this);
+        this.update = this.update.bind(this);
+        this.deleteCourse = this.deleteCourse.bind(this);
+        this.editCourse = this.editCourse.bind(this);
+        this.shareCourse = this.shareCourse.bind(this);
     }
 
     modalClose() {
@@ -30,51 +48,45 @@ class Courses extends React.Component {
         this.setState({ openModal: true });
     }
 
+    deleteCourse(id) {
+
+    }
+
+    editCourse(item) {
+
+    }
+
+    shareCourse(item) {
+        // TODO: Generate Link
+    }
+
+    update() {
+        this.setState({ openModal: false });
+        axios.get(`${HOST}courses/${this.state.category_id}`)
+            .then(res => {
+                this.setState({
+                    items: res.data
+                });
+            })
+            .catch(err => {
+                if (err.response && err.response.data && err.response.data.error) {
+                    this.setState({ apiError: 'Error: ' + err.response.data.error });
+                } else {
+                    this.setState({ apiError: '' + err });
+                }
+                console.error(err);
+            });
+    }
+
     componentDidMount() {
-        // TODO: Fetch Courses
+        this.update();
     }
 
     render() {
-        const items = [
-            {
-                id: "xyz",
-                thumbnail: "https://prod-discovery.edx-cdn.org/media/course/image/bb5e9463-0248-4f78-a337-b8bb9d829f2b-a71b8e897830.small.jpeg",
-                title: "Phy",
-                description: "Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica",
-                slug: "programming-in-c"
-            },
-            {
-                id: "xyz",
-                thumbnail: "https://prod-discovery.edx-cdn.org/media/course/image/bb5e9463-0248-4f78-a337-b8bb9d829f2b-a71b8e897830.small.jpeg",
-                title: "Chemistry",
-                description: "Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica",
-                slug: "programming-in-c"
-            },
-            {
-                id: "xyz",
-                thumbnail: "https://prod-discovery.edx-cdn.org/media/course/image/bb5e9463-0248-4f78-a337-b8bb9d829f2b-a71b8e897830.small.jpeg",
-                title: "Maths",
-                description: "Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica",
-                slug: "programming-in-c"
-            },
-            {
-                id: "xyz",
-                thumbnail: "https://prod-discovery.edx-cdn.org/media/course/image/bb5e9463-0248-4f78-a337-b8bb9d829f2b-a71b8e897830.small.jpeg",
-                title: "Programming in C",
-                description: "Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica",
-                slug: "programming-in-c"
-            },
-            {
-                id: "xyz",
-                thumbnail: "https://prod-discovery.edx-cdn.org/media/course/image/bb5e9463-0248-4f78-a337-b8bb9d829f2b-a71b8e897830.small.jpeg",
-                title: "Programming in C",
-                description: "Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica",
-                slug: "programming-in-c"
-            },
-        ];
+        const items = this.state.items;
         return (
             <main className="admin-content">
-                <NavBar title="Class Name" />
+                <NavBar title={(this.state.catName) ? this.state.catName : "Class Name"} />
                 <div className="admin-body">
 
                     <div className="d-flex" style={{ marginBottom: '1em' }}>
@@ -84,22 +96,25 @@ class Courses extends React.Component {
                         </Button>
                     </div>
 
+                    <span className="errorText">{(this.state.apiError) ? this.state.apiError : ''}</span>
+
+
                     <div className="row">
                         {
                             items.map((ele, ind) => (
                                 <div className="col-md-3" key={`card-${ind}`} style={{ padding: "15px", minWidth: "250px" }}>
                                     <Card>
                                         <CardActionArea onClick={() => {
-                                            this.props.history.push(`/course/${ele.id}`);
+                                            this.props.history.push(`/course/${ele._id}`);
                                         }}>
                                             <CardMedia
                                                 className="card-img"
-                                                image={ele.thumbnail}
-                                                title={ele.title}
+                                                image={`${IMG}${ele.thumbnail}`}
+                                                title={ele.name}
                                             />
                                             <CardContent>
                                                 <Typography gutterBottom variant="h5" component="h2">
-                                                    {ele.title}
+                                                    {ele.name}
                                                 </Typography>
                                                 <Typography variant="body2" color="textSecondary" component="p">
                                                     {ele.description}
@@ -109,17 +124,29 @@ class Courses extends React.Component {
                                         </CardActionArea>
 
                                         <CardActions>
-                                            <Button size="small" color="primary" style={{ color: "green" }}>
+                                            <Button
+                                                size="small"
+                                                color="primary"
+                                                style={{ color: "green" }}
+                                                onClick={() => this.shareCourse(ele)}
+                                            >
                                                 Share
                                             </Button>
 
-                                            <Button size="small" color="primary">
+                                            <Button
+                                                size="small"
+                                                color="primary"
+                                                onClick={() => this.editCourse(ele)}
+                                            >
                                                 Edit
                                             </Button>
 
-                                            <Button size="small" color="primary" style={{ color: "red" }} onClick={()=>{
-
-                                            }}>
+                                            <Button
+                                                size="small"
+                                                color="primary"
+                                                style={{ color: "red" }}
+                                                onClick={() => this.deleteCourse(ele._id)}
+                                            >
                                                 Delete
                                             </Button>
 
@@ -135,7 +162,9 @@ class Courses extends React.Component {
                     open={this.state.openModal}
                     onClose={this.modalClose}
                 >
-                    <CreateCourse onClose={this.modalClose} />
+                    <div>
+                        <CreateCourse onUpdate={this.update} categoryID={this.state.category_id} />
+                    </div>
                 </Modal>
 
 
