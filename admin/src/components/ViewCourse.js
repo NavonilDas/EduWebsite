@@ -86,7 +86,8 @@ class ViewCourse extends React.Component {
         eve.stopPropagation();
         this.setState({
             selected: ele,
-            openModal: true
+            openModal: true,
+            openTest: (ele.title) ? true : false
         });
     }
 
@@ -175,7 +176,7 @@ class ViewCourse extends React.Component {
                                 <div key={i}>
                                     <ListItem
                                         button
-                                        onClick={() => this.props.history.push(`/chapter/${ele._id}`)}
+                                        onClick={() => this.props.history.push((ele.name) ? `/chapter/${ele._id}` : `/create/quiz/${ele._id}`)}
                                     >
                                         <ListItemIcon>
                                             {(ele.name) ? <LibraryBooksIcon /> : <ContactSupportIcon />}

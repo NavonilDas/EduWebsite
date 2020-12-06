@@ -55,7 +55,7 @@ class App extends React.Component {
             <Route path="/create/category" exact component={Courses} />
             <Route path="/users" exact component={Users} />
             <Route path="/chapter/:id" exact component={Chapters} />
-            <Route path="/create/quiz" exact component={CreateTest} />
+            <Route path="/create/quiz/:id" exact component={CreateTest} />
             <Route path="/course/:id" exact component={ViewCourse} />
             <Route path="/content/:chapterID" exact component={AddContent} />
           </Switch>

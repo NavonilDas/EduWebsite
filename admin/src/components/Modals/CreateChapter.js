@@ -8,7 +8,6 @@ const HOST = API.HOST;
 class CreateChapter extends React.Component {
     constructor(props) {
         super(props);
-        console.log(this.props.selected)
         this.state = {
             chapterName: (this.props.selected) ? this.props.selected.name : "",
             nameError: "",
@@ -95,7 +94,7 @@ class CreateChapter extends React.Component {
 
                     <div className="d-flex">
                         <Button variant="contained" color="primary" onClick={this.submit} style={{ marginLeft: "auto" }}>
-                            {this.props.modal ? 'Submit' : 'Update'}
+                            {this.props.selected ? 'Update' : 'Submit'}
                         </Button>
                     </div>
                 </form>

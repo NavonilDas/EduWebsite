@@ -10,10 +10,10 @@ class CreateTest extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            title: (this.props.selected) ? this.props.selected.name : "",
+            title: (this.props.selected) ? this.props.selected.title : "",
             titleError: "",
             description: (this.props.selected) ? this.props.selected.description : "",
-            duration: (this.props.selected) ? this.props.selected.duration : 10,
+            duration: (this.props.selected) ? this.props.selected.duration : 3,
             durationError: "",
             apiError: ""
         };
@@ -32,16 +32,15 @@ class CreateTest extends React.Component {
         this.setState(tmp);
     }
     submit() {
-        if (!this.props.courseID) return;
+        if (!this.props.courseID || !this.props.position) return;
 
         if (this.state.title === "") {
             return this.setState({ titleError: 'Title Can\'t Be Empty' });
         }
 
-        if (this.state.duration <= 0 || isNaN(parseInt(this.state.duration))) {
+        if (this.state.duration <= 0 || isNaN(parseFloat(this.state.duration))) {
             return this.setState({ priceError: 'Duration is Invalid' });
         }
-
 
         // const body = new FormData();
         // body.append('title', this.state.title);
@@ -50,8 +49,9 @@ class CreateTest extends React.Component {
         const body = {
             title: this.state.title,
             description: this.state.description,
-            duration: this.state.duration,
-            course_id: this.props.courseID
+            duration: this.state.duration * 60,
+            course_id: this.props.courseID,
+            position: this.props.position
         };
         const config = {
             withCredentials: true,
@@ -59,6 +59,7 @@ class CreateTest extends React.Component {
 
         let request = null
         if (this.props.selected) {
+            request = axios.put(`${HOST}test/${this.props.selected._id}`, body, config);
         } else {
             request = axios.post(`${HOST}test/create`, body, config);
         }
