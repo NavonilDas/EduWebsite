@@ -99,7 +99,9 @@ class CreateCategory extends React.Component {
         return (
             <div className="create-category modal">
                 <h1 style={{ marginBottom: "8px" }}>Create Category</h1>
-                <span style={{ color: "red" }}>{(this.state.apiError !== "") ? this.state.apiError : ''}</span>
+
+                {(this.state.apiError !== "") ? (<span style={{ color: "red" }}>{this.state.apiError}</span>) : ''}
+
                 <form style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", height: "150px", width: "300px" }}>
                     <TextField
                         required

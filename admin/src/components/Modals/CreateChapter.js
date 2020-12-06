@@ -1,41 +1,81 @@
 import { Button, TextField } from '@material-ui/core';
 import React from 'react';
 
+import axios from 'axios';
+import API from '../../Api';
+const HOST = API.HOST;
+
 class CreateChapter extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             chapterName: this.props.chapterName || "",
-            chapterDescription: this.props.chapterDescription || ""
+            nameError: "",
+            chapterDescription: this.props.chapterDescription || "",
+            apiError: ""
         };
         this.submit = this.submit.bind(this);
         this.handleChange = this.handleChange.bind(this);
     }
+
     handleChange(event) {
         let tmp = {};
         tmp[event.target.name] = event.target.value;
-        console.log(tmp);
         this.setState(tmp);
     }
+
     submit() {
-        // TODO: API Call
-        if (this.props.chapterID) {
-            console.log("TODO: Update");
+        if (this.state.chapterName === "") {
+            return this.setState({ nameError: "Name Can't Be Empty." });
         }
-        console.log(this.state);
-        if (this.props.onSubmit) {
-            this.props.onSubmit();
+        const body = new FormData();
+        body.append("name", this.state.chapterName);
+        body.append("position", this.props.position);
+        body.append("description", this.state.chapterDescription);
+        let request = null;
+        const config = {
+            withCredentials: true,
+            headers: {
+                'content-type': 'multipart/form-data'
+            }
+        };
+
+        if (this.props.selected) {
+
+        } else {
+            request = axios.post(`${HOST}chapters/add/${this.props.courseID}`, body, config);
         }
+        request
+            .then(res => {
+                if (res.data) {
+                    if (this.props.onUpdate) {
+                        this.props.onUpdate();
+                    }
+                }
+            })
+            .catch(err => {
+                if (err.response && err.response.data && err.response.data.error) {
+                    this.setState({ apiError: 'Error :  ' + err.response.data.error });
+                } else {
+                    this.setState({ apiError: '' + err });
+                }
+            });
     }
 
     render() {
         return (
             <div className={`create-chapter ${this.props.modal ? 'modal' : ''}`}>
+                <h1>Add Chapter</h1>
+
+                {(this.state.apiError !== "") ? (<span style={{ color: "red" }}>{this.state.apiError}</span>) : ''}
+
                 <form className="course-form" style={{ minWidth: "400px" }}>
                     <TextField
                         required
                         id="chapter-title"
                         name="chapterName"
+                        error={this.state.nameError !== ""}
+                        helperText={this.state.nameError}
                         onChange={this.handleChange}
                         value={this.state.chapterName}
                         label="Chapter Title"
