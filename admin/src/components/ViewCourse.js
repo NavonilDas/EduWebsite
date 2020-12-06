@@ -1,33 +1,54 @@
-import { Button, Collapse, Divider, IconButton, List, ListItem, ListItemText, Modal } from '@material-ui/core';
+import { Button, Collapse, Divider, IconButton, List, ListItem, ListItemIcon, ListItemText, Modal } from '@material-ui/core';
 import React from 'react';
 import NavBar from './NavBar';
 import $ from 'jquery';
 import 'jquery-ui';
 import 'jquery-ui/ui/widgets/sortable';
 import 'jquery-ui/ui/disable-selection';
+
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
+import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
+import ContactSupportIcon from '@material-ui/icons/ContactSupport';
+
 import CreateChapter from './Modals/CreateChapter';
+
+import axios from 'axios';
+import API from '../Api';
+const HOST = API.HOST;
 
 class ViewCourse extends React.Component {
     constructor(props) {
         super(props);
+
+        let crsName = null;
+        if (this.props?.location?.search) {
+            const params = new URLSearchParams(this.props.location.search);
+            crsName = params.get('name');
+        }
+
         this.state = {
-            title: "Course Title",
+            course_id: this.props.match.params.id,
+            crsName,
             saveChanges: false,
             items: [],
             list: [],
-            openModal: false
+            openModal: false,
+            apiError: "",
+            selected: null,
+            apiError: ""
         };
 
-        this.course_id = this.props.match.params.id;
         this.save_btn = React.createRef();
         this.change = this.change.bind(this);
         this.expandDetail = this.expandDetail.bind(this);
         this.openModal = this.openModal.bind(this);
         this.modalClose = this.modalClose.bind(this);
+        this.update = this.update.bind(this);
+        this.delete = this.delete.bind(this);
+        this.editChapter = this.editChapter.bind(this);
     }
 
     modalClose() {
@@ -46,59 +67,49 @@ class ViewCourse extends React.Component {
         }
         // this.save_btn.current.disabled = false;
     }
+
     componentDidMount() {
-        // TODO: Fetch API
+        this.update();
 
         $("#course-chapters").sortable({
             update: this.change
         }).disableSelection();
         this.setState({
-            items: [
-                {
-                    title: 'Chapter 1',
-                    id: 1,
-                    expand: false
-                },
-                {
-                    title: 'Chapter 2',
-                    id: 1,
-                    expand: false
-                },
-                {
-                    title: 'Chapter 3',
-                    id: 1,
-                    expand: false
-                },
-                {
-                    title: 'Chapter 4',
-                    id: 1,
-                    expand: false
-                },
-                {
-                    title: 'Chapter 5',
-                    id: 1,
-                    expand: false
-                },
-                {
-                    title: 'Chapter 6',
-                    id: 1,
-                    expand: false
-                },
-                {
-                    title: 'Chapter 7',
-                    id: 7,
-                    expand: false
-                },
-            ]
+            items: []
         });
     }
-    delete(eve) {
-        console.log(eve)
+
+    delete(eve, id) {
+        eve.stopPropagation();
     }
 
-    expandDetail(id, index) {
-        // console.log(id);
+    editChapter(eve, ele) {
+        eve.stopPropagation();
+
+    }
+
+    update() {
+        this.setState({ openModal: false });
+        axios.get(`${HOST}content/course/${this.state.course_id}`)
+            .then(res => {
+                if (res.data) {
+                    this.setState({ items: res.data });
+                }
+            })
+            .catch(err => {
+                if (err.response && err.response.data && err.response.data.error) {
+                    this.setState({ apiError: 'Error: ' + err.response.data.error });
+                } else {
+                    this.setState({ apiError: '' + err });
+                }
+                console.error(err);
+            });
+    }
+
+    expandDetail(eve, id, index) {
+        eve.stopPropagation();
         // TODO: find using id
+        console.log('hello')
         this.setState({
             items: this.state.items.map((ele, i) => {
                 if (i === index) {
@@ -119,7 +130,7 @@ class ViewCourse extends React.Component {
     render() {
         return (
             <main className="admin-content">
-                <NavBar title={this.state.title} />
+                <NavBar title={(this.state.crsName) ? this.state.crsName : 'Course Title'} />
                 <div className="admin-body d-flex flex-column">
                     <div className="d-flex">
                         <h2 style={{ flexGrow: 1 }}>Chapters &amp; Tests</h2>
@@ -134,19 +145,45 @@ class ViewCourse extends React.Component {
                         </Button>
                     </div>
 
+                    <span className="errorText">{(this.state.apiError) ? this.state.apiError : ''}</span>
+
                     <div>
-                        <ul ref={this.tmp} id="course-chapters" className="sortable">
+                        <List ref={this.tmp} id="course-chapters" className="sortable" component="nav">
                             {this.state.items.map((ele, i) => (
-                                <li key={i}>{ele.title}
-                                    <IconButton aria-label="Expand" onClick={() => this.expandDetail(ele.id, i)}>
-                                        {ele.expand ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-                                    </IconButton>
-                                    <IconButton aria-label="Edit" href={`/chapter/${ele.id}`}>
-                                        <EditIcon />
-                                    </IconButton>
-                                    <IconButton style={{ color: "#db3825" }} aria-label="Delete" onClick={this.delete}>
-                                        <DeleteIcon />
-                                    </IconButton>
+                                <div key={i}>
+                                    <ListItem
+                                        button
+                                        onClick={() => this.props.history.push(`/chapter/${ele._id}`)}
+                                    >
+                                        <ListItemIcon>
+                                            {(ele.name) ? <LibraryBooksIcon /> : <ContactSupportIcon />}
+                                        </ListItemIcon>
+
+                                        <ListItemText primary={(ele.name) ? ele.name : ele.title} />
+                                        <IconButton
+                                            aria-label="Expand"
+                                            onClick={(eve) => this.expandDetail(eve, ele._id, i)}
+                                        >
+                                            {ele.expand ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                                        </IconButton>
+
+                                        <IconButton
+                                            aria-label="Edit"
+                                            onClick={(eve) => this.editChapter(eve, ele)}
+                                        >
+                                            <EditIcon />
+                                        </IconButton>
+
+                                        <IconButton
+                                            style={{ color: "#db3825" }}
+                                            aria-label="Delete"
+                                            onClick={eve => this.delete(eve, ele._id)}
+                                        >
+                                            <DeleteIcon />
+                                        </IconButton>
+
+                                    </ListItem>
+
                                     <Collapse in={ele.expand} timeout="auto" unmountOnExit>
                                         <Divider />
                                         <List component="nav">
@@ -157,9 +194,10 @@ class ViewCourse extends React.Component {
                                             ))}
                                         </List>
                                     </Collapse>
-                                </li>
+
+                                </div>
                             ))}
-                        </ul>
+                        </List>
                     </div>
                 </div>
 
@@ -167,7 +205,15 @@ class ViewCourse extends React.Component {
                     open={this.state.openModal}
                     onClose={this.modalClose}
                 >
-                    <CreateChapter onSubmit={this.modalClose} modal="true"/>
+                    <div>
+                        <CreateChapter
+                            selected={this.state.selected}
+                            courseID={this.state.course_id}
+                            onUpdate={this.update}
+                            modal="true"
+                            position={this.state.items.length}
+                        />
+                    </div>
                 </Modal>
 
 
