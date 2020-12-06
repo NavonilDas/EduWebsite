@@ -8,10 +8,11 @@ const HOST = API.HOST;
 class CreateChapter extends React.Component {
     constructor(props) {
         super(props);
+        console.log(this.props.selected)
         this.state = {
-            chapterName: this.props.chapterName || "",
+            chapterName: (this.props.selected) ? this.props.selected.name : "",
             nameError: "",
-            chapterDescription: this.props.chapterDescription || "",
+            chapterDescription: (this.props.selected) ? this.props.selected.description : "",
             apiError: ""
         };
         this.submit = this.submit.bind(this);
@@ -41,7 +42,7 @@ class CreateChapter extends React.Component {
         };
 
         if (this.props.selected) {
-
+            request = axios.put(`${HOST}chapters/${this.props.selected._id}`, body, config);
         } else {
             request = axios.post(`${HOST}chapters/add/${this.props.courseID}`, body, config);
         }

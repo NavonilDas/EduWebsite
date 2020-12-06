@@ -1,4 +1,4 @@
-import { Button, Collapse, Divider, IconButton, List, ListItem, ListItemIcon, ListItemText, Modal } from '@material-ui/core';
+import { Button, Collapse, Divider, IconButton, List, ListItem, ListItemIcon, ListItemText, Modal, Typography } from '@material-ui/core';
 import React from 'react';
 import NavBar from './NavBar';
 import $ from 'jquery';
@@ -52,7 +52,7 @@ class ViewCourse extends React.Component {
     }
 
     modalClose() {
-        this.setState({ openModal: false });
+        this.setState({ openModal: false, selected: null });
     }
 
     openModal() {
@@ -85,11 +85,14 @@ class ViewCourse extends React.Component {
 
     editChapter(eve, ele) {
         eve.stopPropagation();
-
+        this.setState({
+            selected: ele,
+            openModal: true
+        });
     }
 
     update() {
-        this.setState({ openModal: false });
+        this.setState({ openModal: false, selected: null });
         axios.get(`${HOST}content/course/${this.state.course_id}`)
             .then(res => {
                 if (res.data) {
@@ -134,15 +137,35 @@ class ViewCourse extends React.Component {
                 <div className="admin-body d-flex flex-column">
                     <div className="d-flex">
                         <h2 style={{ flexGrow: 1 }}>Chapters &amp; Tests</h2>
-                        <Button variant="contained" color="primary" onClick={this.openModal}>
+
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={this.openModal}
+                        >
                             Add Chapter
                         </Button>
-                        <Button variant="contained" style={{ backgroundColor: "#097d01", marginLeft: "1em", marginRight: "1em" }} color="primary">
+
+                        <Button
+                            variant="contained"
+                            style={{ backgroundColor: "#097d01", marginLeft: "1em", marginRight: "1em" }}
+                            color="primary"
+                            onClick={() => this.props.history.push(`/create/quiz?course=${this.state.course_id}`)}
+                        >
                             Add Test
                         </Button>
-                        <Button style={{ marginLeft: "1em" }} variant="contained" color="secondary" disabled={!this.state.saveChanges} ref={this.save_btn}>
+
+                        <Button
+                            style={{ marginLeft: "1em" }}
+                            variant="contained"
+                            color="secondary"
+                            disabled={!this.state.saveChanges}
+                            ref={this.save_btn}
+                            onClick={() => this.savePositions}
+                        >
                             Save Changes
                         </Button>
+
                     </div>
 
                     <span className="errorText">{(this.state.apiError) ? this.state.apiError : ''}</span>
@@ -186,9 +209,14 @@ class ViewCourse extends React.Component {
 
                                     <Collapse in={ele.expand} timeout="auto" unmountOnExit>
                                         <Divider />
+                                        <Typography variant="body1" gutterBottom style={{ margin: "16px", color: "gray" }}>
+                                            {ele.description}
+                                        </Typography>
+                                        <Divider />
+
                                         <List component="nav">
                                             {this.state.list.map((ele, i) => (
-                                                <ListItem button key={`list-${i}`}>
+                                                <ListItem key={`list-${i}`}>
                                                     <ListItemText primary={ele} />
                                                 </ListItem>
                                             ))}
