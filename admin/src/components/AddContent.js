@@ -1,16 +1,17 @@
 import React from 'react';
 import NavBar from './NavBar';
 import { Editor } from 'react-draft-wysiwyg';
-import { EditorState } from 'draft-js';
-import { Button, Modal, TextField } from '@material-ui/core';
+import { Button, Modal, Snackbar, TextField } from '@material-ui/core';
 
-import { convertToRaw } from 'draft-js';
+import { EditorState, ContentState, convertToRaw } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
+import htmlToDraft from 'html-to-draftjs';
 import PhotoLibraryIcon from '@material-ui/icons/PhotoLibrary';
 import PickImage from './Modals/PickImage';
 
 import axios from 'axios';
 import API from '../Api';
+import { Alert } from '@material-ui/lab';
 const HOST = API.HOST;
 
 
@@ -25,18 +26,17 @@ class AddContent extends React.Component {
             position = isNaN(position) ? 0 : position;
         }
 
-        console.log(position);
-
         this.state = {
             chapterID: this.props.match.params.chapterID,
             openModal: false,
-            test_id: null,
+            test_id: this.props.match.params.contentID,
             name: "",
             nameError: "",
             editorState: EditorState.createEmpty(),
             apiError: "",
             position,
-            navTitle: "Add Content"
+            navTitle: "Add Content",
+            openSnackbar: ""
         };
 
         this.openModal = this.openModal.bind(this);
@@ -89,14 +89,25 @@ class AddContent extends React.Component {
 
         let request = null;
         if (this.state.test_id) {
-            // TODO: ADD Some Condition For Update
+            delete body.position;
+            request = axios.put(`${HOST}topics/${this.state.test_id}`, body, { withCredentials: true });
         } else {
             request = axios.post(`${HOST}topics/add/${this.state.chapterID}`, body, { withCredentials: true });
         }
         request
             .then(res => {
                 if (res?.data?.status) {
-                    // TODO: Update URI
+                    let openSnackbar = "Content Updated!";
+                    if (this.state.chapterID) {
+                        this.props.history.push(`/edit/content/${res.data.status.id}`);
+                        openSnackbar = "Content Uploaded!";
+                        this.setState({ chapterID: null, test_id: res.data.status.id });
+                    }
+                    this.setState({
+                        navTitle: this.state.name,
+                        openSnackbar
+                    })
+
                 }
             })
             .catch(err => {
@@ -110,12 +121,47 @@ class AddContent extends React.Component {
 
     }
 
+    componentDidMount() {
+        if (this.state.test_id) {
+            axios.get(`${HOST}topics/${this.state.test_id}`, { withCredentials: true })
+                .then(res => {
+                    if (res.data) {
+                        const blocksFromHtml = htmlToDraft(res.data.content);
+                        const { contentBlocks, entityMap } = blocksFromHtml;
+                        const contentState = ContentState.createFromBlockArray(contentBlocks, entityMap);
+                        const editorState = EditorState.createWithContent(contentState);
+                        this.setState({
+                            navTitle: res.data.title,
+                            name: res.data.title,
+                            editorState
+                        });
+                    }
+                })
+                .catch(err => {
+                    if (err.response && err.response.data && err.response.data.error) {
+                        this.setState({ apiError: 'Error: ' + err.response.data.error });
+                    } else {
+                        this.setState({ apiError: '' + err });
+                    }
+                    console.error(err);
+                });
+
+        }
+
+    }
+
     render() {
         return (
             <main className="admin-content">
                 <NavBar title={this.state.navTitle} />
 
                 <span className="errorText">{(this.state.apiError) ? this.state.apiError : ''}</span>
+
+                <Snackbar open={this.state.openSnackbar !== ""} autoHideDuration={6000} onClose={() => this.setState({ openSnackbar: "" })}>
+                    <Alert onClose={() => this.setState({ openSnackbar: "" })} severity="success">
+                        {this.state.openSnackbar}
+                    </Alert>
+                </Snackbar>
 
                 <div className="admin-body d-flex flex-column" style={{ height: "85vh", overflow: "hidden" }}>
 
