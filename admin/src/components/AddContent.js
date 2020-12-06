@@ -9,18 +9,35 @@ import draftToHtml from 'draftjs-to-html';
 import PhotoLibraryIcon from '@material-ui/icons/PhotoLibrary';
 import PickImage from './Modals/PickImage';
 
+import axios from 'axios';
+import API from '../Api';
+const HOST = API.HOST;
+
+
 class AddContent extends React.Component {
     constructor(props) {
         super(props);
+
+        let position = 0;
+        if (this.props?.location?.search) {
+            const params = new URLSearchParams(this.props.location.search);
+            position = parseInt(params.get('len'));
+            position = isNaN(position) ? 0 : position;
+        }
+
+        console.log(position);
+
         this.state = {
+            chapterID: this.props.match.params.chapterID,
             openModal: false,
+            test_id: null,
             name: "",
             nameError: "",
             editorState: EditorState.createEmpty(),
+            apiError: "",
+            position,
+            navTitle: "Add Content"
         };
-
-        this.chapterID = this.props.match.params.chapterID;
-
 
         this.openModal = this.openModal.bind(this);
         this.modalClose = this.modalClose.bind(this);
@@ -64,13 +81,42 @@ class AddContent extends React.Component {
                 nameError: "Content Name Can't Be Empty!"
             });
         }
-        console.log(this.state.name, markup);
+        const body = {
+            title: this.state.name,
+            content: markup,
+            position: this.state.position,
+        };
+
+        let request = null;
+        if (this.state.test_id) {
+            // TODO: ADD Some Condition For Update
+        } else {
+            request = axios.post(`${HOST}topics/add/${this.state.chapterID}`, body, { withCredentials: true });
+        }
+        request
+            .then(res => {
+                if (res?.data?.status) {
+                    // TODO: Update URI
+                }
+            })
+            .catch(err => {
+                if (err.response && err.response.data && err.response.data.error) {
+                    this.setState({ apiError: 'Error: ' + err.response.data.error });
+                } else {
+                    this.setState({ apiError: '' + err });
+                }
+                console.error(err);
+            });
+
     }
 
     render() {
         return (
             <main className="admin-content">
-                <NavBar title="Content" />
+                <NavBar title={this.state.navTitle} />
+
+                <span className="errorText">{(this.state.apiError) ? this.state.apiError : ''}</span>
+
                 <div className="admin-body d-flex flex-column" style={{ height: "85vh", overflow: "hidden" }}>
 
                     <div className="d-flex">
@@ -90,7 +136,7 @@ class AddContent extends React.Component {
                             color="primary"
                             onClick={this.submit}
                             style={{ margin: "auto" }}>
-                            Submit
+                            {(this.state.test_id) ? 'Update' : 'Submit'}
                         </Button>
                     </div>
 

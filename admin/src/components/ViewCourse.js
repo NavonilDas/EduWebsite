@@ -14,10 +14,10 @@ import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 import ContactSupportIcon from '@material-ui/icons/ContactSupport';
 
 import CreateChapter from './Modals/CreateChapter';
+import CreateTest from './Modals/CreateTest';
 
 import axios from 'axios';
 import API from '../Api';
-import CreateTest from './Modals/CreateTest';
 const HOST = API.HOST;
 
 class ViewCourse extends React.Component {
@@ -137,30 +137,23 @@ class ViewCourse extends React.Component {
     expandDetail(eve, ele, index) {
         eve.stopPropagation();
 
-        if (ele.title) {
-            this.setState({
-                items: this.state.items.map((ele, i) => {
-                    if (i === index) {
-                        ele.expand = !ele.expand;
-                    }
-                    return ele;
-                })
-            });
-        } else {
+        this.setState({
+            list: [],
+            items: this.state.items.map((ele, i) => {
+                if (i === index) {
+                    ele.expand = !ele.expand;
+                }
+                return ele;
+            })
+        });
+
+        if (ele.name) {
             axios.get(`${HOST}content/chapter/${ele._id}`)
                 .then(res => {
                     if (res.data) {
-
                         this.setState({
-                            items: this.state.items.map((ele, i) => {
-                                if (i === index) {
-                                    ele.expand = !ele.expand;
-                                }
-                                return ele;
-                            }),
                             list: res.data
                         });
-
                     }
                 })
                 .catch(err => {
@@ -214,13 +207,16 @@ class ViewCourse extends React.Component {
 
                     <span className="errorText">{(this.state.apiError) ? this.state.apiError : ''}</span>
 
+                    {(this.state.items.length <= 0) ? (<p>No Courses Available</p>) : ''}
+
+
                     <div>
                         <List ref={this.tmp} id="course-chapters" className="sortable" component="nav">
                             {this.state.items.map((ele, i) => (
                                 <div key={i}>
                                     <ListItem
                                         button
-                                        onClick={() => this.props.history.push((ele.name) ? `/chapter/${ele._id}` : `/create/quiz/${ele._id}`)}
+                                        onClick={() => this.props.history.push((ele.name) ? `/chapter/${ele._id}?name=${ele.name}` : `/create/quiz/${ele._id}?name=${ele.title}`)}
                                     >
                                         <ListItemIcon>
                                             {(ele.name) ? <LibraryBooksIcon /> : <ContactSupportIcon />}
@@ -262,7 +258,7 @@ class ViewCourse extends React.Component {
                                                 <List component="nav">
                                                     {this.state.list.map((ele, i) => (
                                                         <ListItem key={`list-${i}`}>
-                                                            <ListItemText primary={ele} />
+                                                            <ListItemText primary={ele.title} />
                                                         </ListItem>
                                                     ))}
                                                 </List>
