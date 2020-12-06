@@ -134,25 +134,44 @@ class ViewCourse extends React.Component {
             });
     }
 
-    expandDetail(eve, id, index) {
+    expandDetail(eve, ele, index) {
         eve.stopPropagation();
 
-        // TODO: Request API
-        this.setState({
-            items: this.state.items.map((ele, i) => {
-                if (i === index) {
-                    ele.expand = !ele.expand;
-                }
-                return ele;
-            }),
-            list: [
-                'Video 1',
-                'Video 2',
-                'Quiz 1',
-                'Research Material',
-                'Quiz 2'
-            ]
-        });
+        if (ele.title) {
+            this.setState({
+                items: this.state.items.map((ele, i) => {
+                    if (i === index) {
+                        ele.expand = !ele.expand;
+                    }
+                    return ele;
+                })
+            });
+        } else {
+            axios.get(`${HOST}content/chapter/${ele._id}`)
+                .then(res => {
+                    if (res.data) {
+
+                        this.setState({
+                            items: this.state.items.map((ele, i) => {
+                                if (i === index) {
+                                    ele.expand = !ele.expand;
+                                }
+                                return ele;
+                            }),
+                            list: res.data
+                        });
+
+                    }
+                })
+                .catch(err => {
+                    if (err.response && err.response.data && err.response.data.error) {
+                        this.setState({ apiError: 'Error: ' + err.response.data.error });
+                    } else {
+                        this.setState({ apiError: '' + err });
+                    }
+                    console.error(err);
+                });
+        }
     }
 
     render() {
@@ -210,7 +229,7 @@ class ViewCourse extends React.Component {
                                         <ListItemText primary={(ele.name) ? ele.name : ele.title} />
                                         <IconButton
                                             aria-label="Expand"
-                                            onClick={(eve) => this.expandDetail(eve, ele._id, i)}
+                                            onClick={(eve) => this.expandDetail(eve, ele, i)}
                                         >
                                             {ele.expand ? <ExpandLessIcon /> : <ExpandMoreIcon />}
                                         </IconButton>
@@ -237,15 +256,19 @@ class ViewCourse extends React.Component {
                                         <Typography variant="body1" gutterBottom style={{ margin: "16px", color: "gray" }}>
                                             {ele.description}
                                         </Typography>
-                                        <Divider />
+                                        {(this.state.list.length > 0) ? (
+                                            <div>
+                                                <Divider />
+                                                <List component="nav">
+                                                    {this.state.list.map((ele, i) => (
+                                                        <ListItem key={`list-${i}`}>
+                                                            <ListItemText primary={ele} />
+                                                        </ListItem>
+                                                    ))}
+                                                </List>
+                                            </div>
+                                        ) : ''}
 
-                                        <List component="nav">
-                                            {this.state.list.map((ele, i) => (
-                                                <ListItem key={`list-${i}`}>
-                                                    <ListItemText primary={ele} />
-                                                </ListItem>
-                                            ))}
-                                        </List>
                                     </Collapse>
 
                                 </div>
