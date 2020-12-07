@@ -3,7 +3,7 @@ import pdfobject from 'pdfobject';
 
 import axios from 'axios';
 import API from '../../Api';
-const { HOST } = API;
+const { HOST, IMG } = API;
 
 
 class ViewContent extends React.Component {
@@ -13,7 +13,9 @@ class ViewContent extends React.Component {
             mediaType: "",
             vid: "",
             vurl: "", // TODO: Video URL
-            content: null
+            content: null,
+            mediaURL: "",
+            apiError: ""
         };
     }
 
@@ -39,13 +41,34 @@ class ViewContent extends React.Component {
                     }
                 });
         }
+        else if (this.props.selected.media) {
+            axios.get(`${HOST}media/${this.props.selected._id}`, { withCredentials: true })
+                .then(res => {
+                    if (res.data) {
+                        this.setState({
+                            mediaType: res.data.type,
+                            mediaURL: res.data.url
+                        });
+                    }
+                })
+                .catch(err => {
+                    if (err.response && err.response.data && err.response.data.error) {
+                        this.setState({ apiError: 'Error :  ' + err.response.data.error });
+                    } else {
+                        this.setState({ apiError: '' + err });
+                    }
+                });
+        }
+
     }
 
     render() {
         return (
             <div className="modal" style={{ maxWidth: "80%", maxHeight: "100%", overflowY: "scroll" }}>
                 <div>
-                    {(this.props.selected.media && this.state.mediaType === 'img') ? <img src="" /> : ''}
+                    <span className="errorText">{(this.state.apiError) ? this.state.apiError : ''}</span>
+
+                    {(this.props.selected.media && this.state.mediaType === 'img') ? <img src={`${IMG}${this.state.mediaURL}`} /> : ''}
                     {(this.props.selected.media && this.state.mediaType === 'pdf') ? <div></div> : ''}
 
                     {(this.props.selected.video) ?
