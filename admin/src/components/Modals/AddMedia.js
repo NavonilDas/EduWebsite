@@ -2,6 +2,11 @@ import { Button, FormControl, InputLabel, MenuItem, Select, TextField } from '@m
 import { DropzoneDialog } from 'material-ui-dropzone';
 import React from 'react';
 
+import axios from 'axios';
+import API from '../../Api';
+const { HOST } = API;
+
+
 class AddMedia extends React.Component {
     constructor(props) {
         super(props);
@@ -67,22 +72,52 @@ class AddMedia extends React.Component {
             alert('File Not Uploaded');
             return;
         }
-        const body = {
-            file: this.state.files,
-            title: this.state.title,
-            chapterID: this.props.chapterID
+        const body = new FormData();
+        body.append('title', this.state.title);
+        body.append('file', this.state.files[0]);
+        body.append('position', this.props.position);
+        body.append('type', this.state.fileType);
+
+        const config = {
+            withCredentials: true,
+            headers: {
+                'content-type': 'multipart/form-data'
+            }
+        };
+
+        let request = null
+        if (this.props.selected) {
+            // TODO: Update
+        } else {
+            request = axios.post(`${HOST}media/add/${this.props.chapterID}`, body, config);
         }
-        // TODO: Add Media
-        console.log(body);
-        if (this.props.onSubmit) {
-            this.props.onSubmit();
-        }
+
+        request
+            .then(res => {
+                if (res.data) {
+                    if (this.props.onUpdate) {
+                        this.props.onUpdate();
+                    }
+                }
+            })
+            .catch(err => {
+                if (err.response && err.response.data && err.response.data.error) {
+                    this.setState({ apiError: 'Error :  ' + err.response.data.error });
+                } else {
+                    this.setState({ apiError: '' + err });
+                }
+                console.error(err);
+            });
+
     }
 
     render() {
         return (
             <div className="add-media modal d-flex flex-column">
-                <h1>Add Media</h1>
+                <h1>{(this.props.selected) ? 'Update' : 'Add'} Media</h1>
+
+                <span className="errorText">{(this.state.apiError) ? this.state.apiError : ''}</span>
+
                 <TextField
                     required
                     error={(this.state.titleError !== "")}
@@ -123,7 +158,7 @@ class AddMedia extends React.Component {
                     color="primary"
                     onClick={this.submit}
                 >
-                    Submit
+                    {(this.props.selected) ? 'Update' : 'Submit'}
                 </Button>
 
                 <DropzoneDialog
