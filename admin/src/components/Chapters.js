@@ -47,7 +47,7 @@ class Chapters extends React.Component {
     }
 
     modalClose() {
-        this.setState({ openModal: false, addMedia: false, addVideo: false });
+        this.setState({ openModal: false, addMedia: false, addVideo: false, selected: null });
     }
 
     openModal() {
@@ -69,7 +69,11 @@ class Chapters extends React.Component {
                 openModal: true
             });
         } else if (ele.media) {
-
+            this.setState({
+                selected: ele,
+                addMedia: true,
+                openModal: true
+            });
         } else if (ele.quiz) {
 
         } else {
@@ -213,8 +217,10 @@ class Chapters extends React.Component {
                         }
                         {(this.state.addMedia) ?
                             <AddMedia
-                                onSubmit={this.modalClose}
+                                onUpdate={this.update}
                                 chapterID={this.state.chapterId}
+                                position={this.state.items.length}
+                                selected={this.state.selected}
                             />
                             : ''
                         }

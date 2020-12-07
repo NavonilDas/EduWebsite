@@ -13,13 +13,13 @@ class AddMedia extends React.Component {
         this.state = {
             open: false,
             files: [],
-            title: "",
+            title: (this.props.selected) ? this.props.selected.title : "",
             titleError: "",
             fileType: "",
             fileTypeError: false,
             mimes: {
                 pdf: ["application/pdf"],
-                image: ['image/jpeg', 'image/png', 'image/bmp'],
+                img: ['image/jpeg', 'image/png', 'image/bmp'],
                 zip: ["application/zip"]
             }
         };
@@ -87,7 +87,7 @@ class AddMedia extends React.Component {
 
         let request = null
         if (this.props.selected) {
-            // TODO: Update
+            request = axios.put(`${HOST}media/${this.props.selected._id}`, body, config);
         } else {
             request = axios.post(`${HOST}media/add/${this.props.chapterID}`, body, config);
         }
@@ -140,7 +140,7 @@ class AddMedia extends React.Component {
                         <MenuItem value="">
                             <em>None</em>
                         </MenuItem>
-                        <MenuItem value="image">Image</MenuItem>
+                        <MenuItem value="img">Image</MenuItem>
                         <MenuItem value="pdf">PDF</MenuItem>
                         <MenuItem value="zip">ZIP</MenuItem>
                     </Select>
