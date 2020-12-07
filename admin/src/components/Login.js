@@ -3,7 +3,8 @@ import React from 'react';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import axios from 'axios';
 import API from '../Api';
-const HOST = API.HOST;
+const { HOST } = API;
+
 
 class Login extends React.Component {
     constructor(props) {

@@ -12,7 +12,7 @@ import PickImage from './Modals/PickImage';
 import axios from 'axios';
 import API from '../Api';
 import { Alert } from '@material-ui/lab';
-const HOST = API.HOST;
+const { HOST } = API;
 
 
 class AddContent extends React.Component {

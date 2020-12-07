@@ -4,7 +4,7 @@ import React from 'react';
 
 import axios from 'axios';
 import API from '../../Api';
-const HOST = API.HOST;
+const { HOST } = API;
 
 
 class CreateCourse extends React.Component {

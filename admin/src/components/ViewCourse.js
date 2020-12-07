@@ -18,7 +18,7 @@ import CreateTest from './Modals/CreateTest';
 
 import axios from 'axios';
 import API from '../Api';
-const HOST = API.HOST;
+const { HOST } = API;
 
 class ViewCourse extends React.Component {
     constructor(props) {

@@ -96,6 +96,35 @@ class Chapters extends React.Component {
 
     deleteItem(eve, ele) {
         eve.stopPropagation();
+        // TODO Ask Confirmation
+        let request = null;
+        if (ele.video) {
+            request = axios.delete(`${HOST}videos/${ele._id}`, { withCredentials: true });
+        } else if (ele.media) {
+            request = axios.delete(`${HOST}media/${ele._id}`, { withCredentials: true });
+        } else if (ele.quiz) {
+            request = axios.delete(`${HOST}test/${ele._id}`, { withCredentials: true });
+        } else {
+            // Topic
+            request = axios.delete(`${HOST}topics/${ele._id}`, { withCredentials: true });
+        }
+
+        request
+            .then(res => {
+                if (res.data) {
+                    this.setState({
+                        items: this.state.items.filter(item => (item._id !== ele._id) && (ele.title !== item.title))
+                    });
+                }
+            })
+            .catch(err => {
+                if (err.response && err.response.data && err.response.data.error) {
+                    this.setState({ apiError: 'Error :  ' + err.response.data.error });
+                } else {
+                    this.setState({ apiError: '' + err });
+                }
+            });
+
     }
 
     update() {
@@ -190,11 +219,11 @@ class Chapters extends React.Component {
                                     <ListItemText primary={ele.title} />
                                     <IconButton
                                         aria-label="Edit"
-                                        onClick={(eve) => this.editItem(eve, ele)}
+                                        onClick={eve => this.editItem(eve, ele)}
                                     >
                                         <EditIcon />
                                     </IconButton>
-                                    <IconButton style={{ color: "#db3825" }} aria-label="Delete" onClick={this.delete}>
+                                    <IconButton style={{ color: "#db3825" }} aria-label="Delete" onClick={eve => this.deleteItem(eve, ele)}>
                                         <DeleteIcon />
                                     </IconButton>
 
