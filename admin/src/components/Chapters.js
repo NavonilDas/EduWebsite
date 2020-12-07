@@ -22,6 +22,7 @@ import CreateTest from './Modals/CreateTest';
 const { HOST } = API;
 
 class Chapters extends React.Component {
+
     constructor(props) {
         super(props);
 
@@ -46,6 +47,7 @@ class Chapters extends React.Component {
         this.openModal = this.openModal.bind(this);
         this.modalClose = this.modalClose.bind(this);
         this.update = this.update.bind(this);
+        this.viewItem = this.viewItem.bind(this);
     }
 
     modalClose() {
@@ -92,6 +94,18 @@ class Chapters extends React.Component {
             // Topic
             this.props.history.push(`/edit/content/${ele._id}`);
         }
+    }
+
+    viewItem(ele) {
+
+        if (ele.video) {
+            
+        } else if (ele.media) {
+        } else if (ele.quiz) {
+        } else {
+            // Topic
+        }
+
     }
 
     deleteItem(eve, ele) {
@@ -212,6 +226,7 @@ class Chapters extends React.Component {
                             <div key={i}>
                                 <ListItem
                                     button
+                                    onClick={() => this.viewItem(ele)}
                                 >
                                     <ListItemIcon>
                                         {(ele.video) ? <PlayCircleFilledIcon /> : ((ele.media) ? <WebAssetIcon /> : ((ele.quiz) ? <ContactSupportIcon /> : <MenuBookIcon />))}
