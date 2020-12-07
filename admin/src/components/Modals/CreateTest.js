@@ -31,8 +31,10 @@ class CreateTest extends React.Component {
         }
         this.setState(tmp);
     }
+
     submit() {
-        if (!this.props.courseID || !this.props.position) return;
+        if (!this.props.courseID && !this.props.chapterID) return;
+        if (!this.props.position) return;
 
         if (this.state.title === "") {
             return this.setState({ titleError: 'Title Can\'t Be Empty' });
@@ -50,9 +52,14 @@ class CreateTest extends React.Component {
             title: this.state.title,
             description: this.state.description,
             duration: this.state.duration * 60,
-            course_id: this.props.courseID,
             position: this.props.position
         };
+        if (this.props.courseID) {
+            body.course_id = this.props.courseID;
+        }
+        if (this.props.chapterID) {
+            body.chapter_id = this.props.chapterID;
+        }
         const config = {
             withCredentials: true,
         };

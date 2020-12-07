@@ -18,6 +18,7 @@ import WebAssetIcon from '@material-ui/icons/WebAsset'; // Media
 
 import axios from 'axios';
 import API from '../Api';
+import CreateTest from './Modals/CreateTest';
 const { HOST } = API;
 
 class Chapters extends React.Component {
@@ -36,6 +37,7 @@ class Chapters extends React.Component {
             openModal: false,
             addVideo: false,
             addMedia: false,
+            addTest: false,
             items: [],
             apiError: "",
             selected: null
@@ -47,7 +49,13 @@ class Chapters extends React.Component {
     }
 
     modalClose() {
-        this.setState({ openModal: false, addMedia: false, addVideo: false, selected: null });
+        this.setState({
+            openModal: false,
+            addMedia: false,
+            addVideo: false,
+            addTest: false,
+            selected: null
+        });
     }
 
     openModal() {
@@ -75,7 +83,11 @@ class Chapters extends React.Component {
                 openModal: true
             });
         } else if (ele.quiz) {
-
+            this.setState({
+                selected: ele,
+                addTest: true,
+                openModal: true
+            });
         } else {
             // Topic
             this.props.history.push(`/edit/content/${ele._id}`);
@@ -87,7 +99,7 @@ class Chapters extends React.Component {
     }
 
     update() {
-        this.setState({ openModal: false, addMedia: false, addVideo: false, selected: null });
+        this.modalClose();
         axios.get(`${HOST}content/chapter/${this.state.chapterId}`)
             .then(res => {
                 if (res.data) {
@@ -132,12 +144,7 @@ class Chapters extends React.Component {
                             variant="contained"
                             color="primary"
                             style={{ marginLeft: "1em" }}
-                            onClick={() => {
-                                this.setState({
-                                    openModal: true,
-                                    addVideo: true
-                                });
-                            }}
+                            onClick={() => this.setState({ openModal: true, addVideo: true })}
                         >
                             Add Video
                         </Button>
@@ -146,9 +153,7 @@ class Chapters extends React.Component {
                             variant="contained"
                             style={{ backgroundColor: "#097d01", marginLeft: "1em", marginRight: "1em" }}
                             color="primary"
-                            onClick={() => {
-                                this.props.history.push(`/create/quiz?cid=${this.state.chapterId}`);
-                            }}
+                            onClick={() => this.setState({ openModal: true, addTest: true })}
                         >
                             Add Test
                         </Button>
@@ -206,6 +211,20 @@ class Chapters extends React.Component {
                     onClose={this.modalClose}
                 >
                     <div>
+
+                        {(this.state.addTest) ?
+                            (
+                                <CreateTest
+                                    selected={this.state.selected}
+                                    chapterID={this.state.chapterId}
+                                    onUpdate={this.update}
+                                    position={this.state.items.length}
+                                />
+                            )
+                            :
+                            ''
+                        }
+
                         {(this.state.addVideo) ?
                             <AddVideo
                                 onUpdate={this.update}

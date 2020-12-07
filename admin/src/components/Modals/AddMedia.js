@@ -10,6 +10,7 @@ const { HOST } = API;
 class AddMedia extends React.Component {
     constructor(props) {
         super(props);
+
         this.state = {
             open: false,
             files: [],
@@ -23,6 +24,7 @@ class AddMedia extends React.Component {
                 zip: ["application/zip"]
             }
         };
+
         this.handleClose = this.handleClose.bind(this);
         this.handleSave = this.handleSave.bind(this);
         this.handleOpen = this.handleOpen.bind(this);
@@ -63,7 +65,6 @@ class AddMedia extends React.Component {
     }
 
     submit() {
-        // TODO: API Request
         if (this.state.title === "") {
             this.setState({ titleError: "Empty Title!" });
             return;
