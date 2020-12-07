@@ -10,12 +10,13 @@ class AddVideo extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            title: "",
+            title: (this.props.selected) ? this.props.selected.title : "",
             link: "",
             linkError: "",
             titleError: "",
             apiError: ""
         };
+
         this.handleChange = this.handleChange.bind(this);
         this.submit = this.submit.bind(this);
     }
@@ -45,6 +46,31 @@ class AddVideo extends React.Component {
         return (match && match[7].length === 11) ? match[7] : false;
     }
 
+    componentDidMount() {
+        if (this.props.selected) {
+            axios.get(`${HOST}videos/${this.props.selected._id}`, { withCredentials: true })
+                .then(res => {
+                    if (res.data) {
+                        this.setState({
+                            link: this.constructUrl(res.data)
+                        });
+                    }
+                })
+                .catch(err => {
+                    if (err.response && err.response.data && err.response.data.error) {
+                        this.setState({ apiError: 'Error :  ' + err.response.data.error });
+                    } else {
+                        this.setState({ apiError: '' + err });
+                    }
+                });
+        }
+    }
+
+    constructUrl(ele) {
+        if (ele.vid) return `https://www.youtube.com/watch?v=${ele.vid}`;
+        return ele.url;
+    }
+
     submit() {
         const vid = (this.state.link !== '') ? this.extractID(this.state.link) : false;
         if (!vid) {
@@ -68,7 +94,7 @@ class AddVideo extends React.Component {
 
         let request = null
         if (this.props.selected) {
-            // TODO: Update
+            request = axios.put(`${HOST}videos/${this.props.selected._id}`, body, { withCredentials: true });
         } else {
             request = axios.post(`${HOST}videos/add/${this.props.chapterID}`, body, { withCredentials: true });
         }
@@ -87,13 +113,14 @@ class AddVideo extends React.Component {
                 } else {
                     this.setState({ apiError: '' + err });
                 }
+                console.error(err);
             });
     }
 
     render() {
         return (
             <div className="add-video modal d-flex flex-column">
-                <h1>Add Video</h1>
+                <h1>{(this.props.selected) ? 'Update' : 'Add'} Video</h1>
 
                 <span className="errorText">{(this.state.apiError) ? this.state.apiError : ''}</span>
 
@@ -124,7 +151,7 @@ class AddVideo extends React.Component {
                     color="primary"
                     onClick={this.submit}
                 >
-                    Submit
+                    {(this.props.selected) ? 'Update' : 'Submit'}
                 </Button>
 
             </div>

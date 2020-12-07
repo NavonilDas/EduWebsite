@@ -37,7 +37,8 @@ class Chapters extends React.Component {
             addVideo: false,
             addMedia: false,
             items: [],
-            apiError: ""
+            apiError: "",
+            selected: null
         };
 
         this.openModal = this.openModal.bind(this);
@@ -59,8 +60,30 @@ class Chapters extends React.Component {
         }).disableSelection();
     }
 
+    editItem(eve, ele) {
+        eve.stopPropagation();
+        if (ele.video) {
+            this.setState({
+                selected: ele,
+                addVideo: true,
+                openModal: true
+            });
+        } else if (ele.media) {
+
+        } else if (ele.quiz) {
+
+        } else {
+            // Topic
+            this.props.history.push(`/edit/content/${ele._id}`);
+        }
+    }
+
+    deleteItem(eve, ele) {
+        eve.stopPropagation();
+    }
+
     update() {
-        this.setState({ openModal: false, addMedia: false, addVideo: false });
+        this.setState({ openModal: false, addMedia: false, addVideo: false, selected: null });
         axios.get(`${HOST}content/chapter/${this.state.chapterId}`)
             .then(res => {
                 if (res.data) {
@@ -156,7 +179,10 @@ class Chapters extends React.Component {
                                         {(ele.video) ? <PlayCircleFilledIcon /> : ((ele.media) ? <WebAssetIcon /> : ((ele.quiz) ? <ContactSupportIcon /> : <MenuBookIcon />))}
                                     </ListItemIcon>
                                     <ListItemText primary={ele.title} />
-                                    <IconButton aria-label="Edit" href={`/create/chapter?id=${ele.id}`}>
+                                    <IconButton
+                                        aria-label="Edit"
+                                        onClick={(eve) => this.editItem(eve, ele)}
+                                    >
                                         <EditIcon />
                                     </IconButton>
                                     <IconButton style={{ color: "#db3825" }} aria-label="Delete" onClick={this.delete}>
@@ -176,8 +202,22 @@ class Chapters extends React.Component {
                     onClose={this.modalClose}
                 >
                     <div>
-                        {(this.state.addVideo) ? <AddVideo onUpdate={this.update} chapterID={this.state.chapterId} position={this.state.items.length} /> : ''}
-                        {(this.state.addMedia) ? <AddMedia onSubmit={this.modalClose} chapterID={this.state.chapterId} /> : ''}
+                        {(this.state.addVideo) ?
+                            <AddVideo
+                                onUpdate={this.update}
+                                chapterID={this.state.chapterId}
+                                position={this.state.items.length}
+                                selected={this.state.selected}
+                            />
+                            : ''
+                        }
+                        {(this.state.addMedia) ?
+                            <AddMedia
+                                onSubmit={this.modalClose}
+                                chapterID={this.state.chapterId}
+                            />
+                            : ''
+                        }
                     </div>
                 </Modal>
 
