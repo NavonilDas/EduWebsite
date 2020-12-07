@@ -6,11 +6,13 @@ import 'jquery-ui';
 import 'jquery-ui/ui/widgets/sortable';
 import 'jquery-ui/ui/disable-selection';
 
-import DeleteIcon from '@material-ui/icons/Delete';
-import EditIcon from '@material-ui/icons/Edit';
 import AddVideo from './Modals/AddVideo';
 import AddMedia from './Modals/AddMedia';
+import CreateTest from './Modals/CreateTest';
+import ViewContent from './Modals/ViewContent';
 
+import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
 import ContactSupportIcon from '@material-ui/icons/ContactSupport'; // Quiz
 import MenuBookIcon from '@material-ui/icons/MenuBook'; // TOPIC
 import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled'; // Video
@@ -18,7 +20,6 @@ import WebAssetIcon from '@material-ui/icons/WebAsset'; // Media
 
 import axios from 'axios';
 import API from '../Api';
-import CreateTest from './Modals/CreateTest';
 const { HOST } = API;
 
 class Chapters extends React.Component {
@@ -39,6 +40,7 @@ class Chapters extends React.Component {
             addVideo: false,
             addMedia: false,
             addTest: false,
+            viewSelected: false,
             items: [],
             apiError: "",
             selected: null
@@ -98,13 +100,15 @@ class Chapters extends React.Component {
 
     viewItem(ele) {
 
-        if (ele.video) {
-            
-        } else if (ele.media) {
-        } else if (ele.quiz) {
-        } else {
-            // Topic
+        if (ele.quiz) {
+            return this.props.history.push(`/create/quiz/${ele._id}`);
         }
+
+        this.setState({
+            selected: ele,
+            viewSelected: true,
+            openModal: true
+        });
 
     }
 
@@ -255,6 +259,16 @@ class Chapters extends React.Component {
                     onClose={this.modalClose}
                 >
                     <div>
+
+                        {(this.state.viewSelected) ?
+                            (
+                                <ViewContent
+                                    selected={this.state.selected}
+                                />
+                            )
+                            :
+                            ''
+                        }
 
                         {(this.state.addTest) ?
                             (
