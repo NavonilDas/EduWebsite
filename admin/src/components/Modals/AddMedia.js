@@ -124,7 +124,7 @@ class AddMedia extends React.Component {
                     error={(this.state.titleError !== "")}
                     name="title"
                     id="title"
-                    label="Video Title"
+                    label="Media Title"
                     helperText={this.state.titleError}
                     value={this.state.title}
                     onChange={this.handleChange}

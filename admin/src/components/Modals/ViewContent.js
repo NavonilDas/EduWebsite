@@ -45,6 +45,12 @@ class ViewContent extends React.Component {
             axios.get(`${HOST}media/${this.props.selected._id}`, { withCredentials: true })
                 .then(res => {
                     if (res.data) {
+
+                        if (res.data.type === 'pdf') {
+                            pdfobject.embed(`${IMG}${res.data.url}`, '#show-pdf-here');
+                        }
+
+                        // TODO: Handle ZIP
                         this.setState({
                             mediaType: res.data.type,
                             mediaURL: res.data.url
@@ -63,13 +69,15 @@ class ViewContent extends React.Component {
     }
 
     render() {
+        if (!this.props.selected) return;
         return (
             <div className="modal" style={{ maxWidth: "80%", maxHeight: "100%", overflowY: "scroll" }}>
                 <div>
                     <span className="errorText">{(this.state.apiError) ? this.state.apiError : ''}</span>
 
+                    <div id="show-pdf-here" style={{ width: "80vw", height: "90vh" }} className={(this.state.mediaType !== 'pdf') ? "d-none" : ''}></div>
+
                     {(this.props.selected.media && this.state.mediaType === 'img') ? <img src={`${IMG}${this.state.mediaURL}`} /> : ''}
-                    {(this.props.selected.media && this.state.mediaType === 'pdf') ? <div></div> : ''}
 
                     {(this.props.selected.video) ?
                         (
