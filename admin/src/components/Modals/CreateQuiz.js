@@ -1,8 +1,9 @@
 import React from 'react';
 import { Editor } from 'react-draft-wysiwyg';
-import { EditorState } from 'draft-js';
-import { convertToRaw } from 'draft-js';
+import { EditorState, ContentState, convertToRaw } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
+import htmlToDraft from 'html-to-draftjs';
+
 import { Button, Checkbox, FormControlLabel, TextField } from '@material-ui/core';
 import '../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import { DropzoneDialog } from 'material-ui-dropzone';
@@ -16,10 +17,10 @@ class CreateQuiz extends React.Component {
         super(props);
         this.state = {
             editorState: EditorState.createEmpty(),
-            opt1: "",
-            opt2: "",
-            opt3: "",
-            opt4: "",
+            opt1: (this.props.selected) ? this.props.selected.options[0] : "",
+            opt2: (this.props.selected) ? this.props.selected.options[1] : "",
+            opt3: (this.props.selected) ? this.props.selected.options[2] : "",
+            opt4: (this.props.selected) ? this.props.selected.options[3] : "",
             ans1: false,
             ans2: false,
             ans3: false,
@@ -64,7 +65,21 @@ class CreateQuiz extends React.Component {
     };
 
     componentDidMount() {
+        if (this.props.selected) {
+            const ans = this.props.selected.answer;
+            const blocksFromHtml = htmlToDraft(this.props.selected.question);
+            const { contentBlocks, entityMap } = blocksFromHtml;
+            const contentState = ContentState.createFromBlockArray(contentBlocks, entityMap);
+            const editorState = EditorState.createWithContent(contentState);
 
+            this.setState({
+                ans1: ans.indexOf(this.state.opt1) > -1,
+                ans2: ans.indexOf(this.state.opt2) > -1,
+                ans3: ans.indexOf(this.state.opt3) > -1,
+                ans4: ans.indexOf(this.state.opt4) > -1,
+                editorState
+            });
+        }
     }
 
     handleChange(event) {
@@ -161,13 +176,18 @@ class CreateQuiz extends React.Component {
         };
 
         let request = null;
-        // TODO: Update
-        request = axios.post(`${HOST}test/add/${this.props.testID}`, body, config);
+
+        if (this.props.selected) {
+            request = axios.put(`${HOST}test/${this.props.testID}/${this.props.selected._id}`, body, config);
+        } else {
+            request = axios.post(`${HOST}test/add/${this.props.testID}`, body, config);
+        }
+
         request
             .then(res => {
                 if (res.data) {
                     if (this.props.onUpdate) {
-                        this.props.onUpdate();
+                        this.props.onUpdate(this.props.selected ? true : false);
                     }
                 }
             })
@@ -184,7 +204,7 @@ class CreateQuiz extends React.Component {
     render() {
         return (
             <div className="create-quiz modal">
-                <h1>Create Quiz</h1>
+                <h1>{(this.props.selected) ? 'Update' : 'Create'} Quiz</h1>
                 <label className="label"> Question </label>
                 <div style={{ height: "350px", overflowY: "scroll" }}>
                     <Editor
@@ -304,7 +324,7 @@ class CreateQuiz extends React.Component {
 
                 <div className="d-flex">
                     <Button variant="contained" color="primary" onClick={this.submit} style={{ marginLeft: "auto" }}>
-                        Submit
+                        {(this.props.selected) ? 'Update' : 'Submit'}
                     </Button>
                 </div>
 

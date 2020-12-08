@@ -16,7 +16,8 @@ class CreateTest extends React.Component {
             testName: "Create Test",
             description: "",
             openModal: false,
-            questions: []
+            questions: [],
+            selected: null
         };
 
         this.openModal = this.openModal.bind(this);
@@ -130,7 +131,11 @@ class CreateTest extends React.Component {
 
 
                                     <CardActions>
-                                        <Button variant="contained" color="primary">
+                                        <Button
+                                            variant="contained"
+                                            color="primary"
+                                            onClick={() => this.setState({ selected: ele, openModal: true })}
+                                        >
                                             Edit
                                         </Button>
 
@@ -152,10 +157,13 @@ class CreateTest extends React.Component {
                     open={this.state.openModal}
                     onClose={this.modalClose}
                 >
-                    <CreateQuiz
-                        testID={this.state.test_id}
-                        onUpdate={this.addQuestion}
-                    />
+                    <div>
+                        <CreateQuiz
+                            selected={this.state.selected}
+                            testID={this.state.test_id}
+                            onUpdate={this.addQuestion}
+                        />
+                    </div>
                 </Modal>
 
             </main>
