@@ -77,11 +77,11 @@ class ViewContent extends React.Component {
 
                     <div id="show-pdf-here" style={{ width: "80vw", height: "90vh" }} className={(this.state.mediaType !== 'pdf') ? "d-none" : ''}></div>
 
-                    {(this.props.selected.media && this.state.mediaType === 'img') ? <img src={`${IMG}${this.state.mediaURL}`} /> : ''}
+                    {(this.props.selected.media && this.state.mediaType === 'img') ? <img src={`${IMG}${this.state.mediaURL}`} alt="media"/> : ''}
 
                     {(this.props.selected.video) ?
                         (
-                            <iframe id="ytplayer" type="text/html" width="640" height="360" src={`https://www.youtube.com/embed/${this.state.vid}?autoplay=1`} frameborder="0"></iframe>
+                            <iframe id="ytplayer" title="YoutubeVideo" type="text/html" width="640" height="360" src={`https://www.youtube.com/embed/${this.state.vid}?autoplay=1`} frameborder="0"></iframe>
                         ) : ''}
                 </div>
             </div>
