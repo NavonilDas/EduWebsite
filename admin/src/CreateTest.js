@@ -1,10 +1,11 @@
-import { Button, Card, CardActions, CardContent, Checkbox, FormControlLabel, List, ListItem, Modal, Typography } from '@material-ui/core';
+import { Button, Card, CardActions, CardContent, Checkbox, FormControlLabel, List, ListItem, Modal, Snackbar, Typography } from '@material-ui/core';
 import React from 'react';
 import CreateQuiz from './components/Modals/CreateQuiz';
 import NavBar from './components/NavBar';
 
 import axios from 'axios';
 import API from './Api';
+import { Alert } from '@material-ui/lab';
 const { HOST } = API;
 
 class CreateTest extends React.Component {
@@ -17,7 +18,8 @@ class CreateTest extends React.Component {
             description: "",
             openModal: false,
             questions: [],
-            selected: null
+            selected: null,
+            openSnackbar: false
         };
 
         this.openModal = this.openModal.bind(this);
@@ -55,10 +57,13 @@ class CreateTest extends React.Component {
             });
     }
 
-    addQuestion() {
+    addQuestion(show) {
+
         this.setState({
-            openModal: false
+            openModal: false,
+            openSnackbar: show
         });
+
         if (this.state.test_id) {
             axios.get(`${HOST}test/admin/${this.state.test_id}`, { withCredentials: true })
                 .then(res => {
@@ -152,6 +157,12 @@ class CreateTest extends React.Component {
 
 
                 </div>
+
+                <Snackbar open={this.state.openSnackbar} autoHideDuration={6000} onClose={() => this.setState({ openSnackbar: false })}>
+                    <Alert onClose={() => this.setState({ openSnackbar: false })} severity="success">
+                        Question Updated!
+                    </Alert>
+                </Snackbar>
 
                 <Modal
                     open={this.state.openModal}
