@@ -34,7 +34,9 @@ class CreateQuiz extends React.Component {
         this.onEditorStateChange = this.onEditorStateChange.bind(this);
         this.submit = this.submit.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.checkUnique = this.checkUnique.bind(this);
     }
+
     handleSave(files) {
         //Saving files to state for further use and closing Modal.
         this.setState({
@@ -76,6 +78,27 @@ class CreateQuiz extends React.Component {
         this.setState(tmp);
     }
 
+    checkUnique() {
+        const tmp = {};
+        tmp[this.state.opt1.trim()] = true;
+        if (tmp[this.state.opt2.trim()]) {
+            alert('Duplicate Option Found!');
+            return true;
+        } else tmp[this.state.opt2.trim()] = true;
+
+        if (tmp[this.state.opt3.trim()]) {
+            alert('Duplicate Option Found!');
+            return true;
+        } else tmp[this.state.opt3.trim()] = true;
+
+        if (tmp[this.state.opt4.trim()]) {
+            alert('Duplicate Option Found!');
+            return true;
+        } else tmp[this.state.opt4.trim()] = true;
+
+        return false;
+    }
+
     submit() {
         const rawContentState = convertToRaw(this.state.editorState.getCurrentContent());
         const markup = draftToHtml(
@@ -85,15 +108,23 @@ class CreateQuiz extends React.Component {
             alert("Question is Empty!");
             return;
         }
-        if (this.state.opt1 === "" || this.state.opt2 === "" || this.state.opt3 === "" || this.state.opt4 === "") {
+
+        if (
+            this.state.opt1.trim() === "" ||
+            this.state.opt2.trim() === "" ||
+            this.state.opt3.trim() === "" ||
+            this.state.opt4.trim() === ""
+        ) {
             alert("Option is Empty!");
             return;
         }
+
         if (!(this.state.ans1 || this.state.ans2 || this.state.ans3 || this.state.ans4)) {
             alert("Answer is Empty!");
             return;
         }
-        // TODO: Check IF Option is Duplicate
+
+        if (this.checkUnique()) return;
 
         const solution = [];
         if (this.state.ans1) {
@@ -175,6 +206,7 @@ class CreateQuiz extends React.Component {
                         name="opt1"
                         id="option1"
                         label="Option 1"
+                        multiline
                         value={this.state.opt1}
                         onChange={this.handleChange}
                     />
@@ -183,6 +215,7 @@ class CreateQuiz extends React.Component {
                         name="opt2"
                         id="option2"
                         label="Option 2"
+                        multiline
                         value={this.state.opt2}
                         onChange={this.handleChange}
                     />
@@ -190,6 +223,7 @@ class CreateQuiz extends React.Component {
                         required
                         name="opt3"
                         id="option3"
+                        multiline
                         label="Option 3"
                         value={this.state.opt3}
                         onChange={this.handleChange}
@@ -199,6 +233,7 @@ class CreateQuiz extends React.Component {
                         name="opt4"
                         id="option4"
                         label="Option 4"
+                        multiline
                         value={this.state.opt4}
                         onChange={this.handleChange}
                     />
