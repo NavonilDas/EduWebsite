@@ -36,9 +36,22 @@ class CreateTest extends React.Component {
         this.setState({ openModal: true });
     }
 
-    deleteQuestion(index) {
-        // TODO: Fetch API
-        console.log(index);
+    deleteQuestion(id) {
+        // TODO: ASK Confirmation
+        axios.delete(`${HOST}test/del/${this.state.test_id}/${id}`, { withCredentials: true })
+            .then(res => {
+                this.setState({
+                    questions: this.state.questions.filter(ele => ele._id !== id)
+                });
+            })
+            .catch(err => {
+                if (err.response && err.response.data && err.response.data.error) {
+                    this.setState({ apiError: 'Error :  ' + err.response.data.error });
+                } else {
+                    this.setState({ apiError: '' + err });
+                }
+                console.error(err);
+            });
     }
 
     addQuestion() {
@@ -68,7 +81,6 @@ class CreateTest extends React.Component {
     render() {
         // Sample Questions
         const questions = this.state.questions;
-        console.log(questions.length);
 
         return (
             <main className="admin-content">
@@ -85,6 +97,8 @@ class CreateTest extends React.Component {
                             Add
                         </Button>
                     </div>
+
+                    <span className="errorText">{(this.state.apiError) ? this.state.apiError : ''}</span>
 
                     <List>
                         {questions.map((ele, ind) => (
@@ -120,7 +134,7 @@ class CreateTest extends React.Component {
                                             Edit
                                         </Button>
 
-                                        <Button variant="contained" color="primary" style={{ backgroundColor: "#f0242e" }} onClick={() => this.deleteQuestion(ind)}>
+                                        <Button variant="contained" color="primary" style={{ backgroundColor: "#f0242e" }} onClick={() => this.deleteQuestion(ele._id)}>
                                             Delete
                                         </Button>
 
