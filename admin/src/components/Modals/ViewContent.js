@@ -20,13 +20,10 @@ class ViewContent extends React.Component {
     }
 
     componentDidMount() {
-        // TODO: REQUEST
-        // console.log(pdfobject);
         if (this.props.selected.video) {
             axios.get(`${HOST}videos/${this.props.selected._id}`, { withCredentials: true })
                 .then(res => {
                     if (res.data) {
-                        console.log(res.data);
                         this.setState({
                             vid: res.data.vid,
                             vurl: res.data.url
@@ -64,8 +61,24 @@ class ViewContent extends React.Component {
                         this.setState({ apiError: '' + err });
                     }
                 });
-        }
+        } else {
+            // TOPIC
+            axios.get(`${HOST}topics/${this.props.selected._id}`, { withCredentials: true })
+                .then(res => {
+                    this.setState({
+                        content: res.data,
+                        mediaType: "topic"
+                    });
+                })
+                .catch(err => {
+                    if (err.response && err.response.data && err.response.data.error) {
+                        this.setState({ apiError: 'Error :  ' + err.response.data.error });
+                    } else {
+                        this.setState({ apiError: '' + err });
+                    }
+                });
 
+        }
     }
 
     render() {
@@ -77,12 +90,25 @@ class ViewContent extends React.Component {
 
                     <div id="show-pdf-here" style={{ width: "80vw", height: "90vh" }} className={(this.state.mediaType !== 'pdf') ? "d-none" : ''}></div>
 
-                    {(this.props.selected.media && this.state.mediaType === 'img') ? <img src={`${IMG}${this.state.mediaURL}`} alt="media"/> : ''}
+                    {(this.props.selected.media && this.state.mediaType === 'img') ? <img src={`${IMG}${this.state.mediaURL}`} alt="media" /> : ''}
 
                     {(this.props.selected.video) ?
                         (
                             <iframe id="ytplayer" title="YoutubeVideo" type="text/html" width="640" height="360" src={`https://www.youtube.com/embed/${this.state.vid}?autoplay=1`} frameborder="0"></iframe>
                         ) : ''}
+
+
+                    {
+                        (this.state.mediaType === 'topic') ?
+                            (
+                                <div style={{ width: "70vw", height: "90vh" }}>
+                                    <h1>{this.state.content.title}</h1>
+                                    <div dangerouslySetInnerHTML={{ __html: this.state.content.content }}></div>
+                                </div>
+                            )
+                            :
+                            ''
+                    }
                 </div>
             </div>
         );
