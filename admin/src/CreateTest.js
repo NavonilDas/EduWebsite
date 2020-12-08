@@ -6,20 +6,9 @@ import NavBar from './components/NavBar';
 class CreateTest extends React.Component {
     constructor(props) {
         super(props);
-        let course_id = null, chapter_id = null, test_id = null;
-
-        if (this.props?.location?.search) {
-            const params = new URLSearchParams(this.props.location.search);
-            course_id = params.get('course')
-            chapter_id = params.get('chapter')
-            test_id = params.get('test')
-        }
-
 
         this.state = {
-            course_id,
-            chapter_id,
-            test_id,
+            test_id: this.props.match.params.id,
             testName: "Create Test",
             openModal: false,
             questions: []
@@ -28,10 +17,12 @@ class CreateTest extends React.Component {
         this.openModal = this.openModal.bind(this);
         this.modalClose = this.modalClose.bind(this);
         this.deleteQuestion = this.deleteQuestion.bind(this);
+        this.addQuestion = this.addQuestion.bind(this);
     }
     componentDidMount() {
-        if(this.state.test_id){
+        if (this.state.test_id) {
             // Test is already Created
+            // TODO: Fetch Question
         }
     }
 
@@ -46,6 +37,13 @@ class CreateTest extends React.Component {
     deleteQuestion(index) {
         // TODO: Fetch API
         console.log(index);
+    }
+
+    addQuestion(que) {
+        console.log(que);
+        this.setState({
+            openModal: false
+        });
     }
 
     render() {
@@ -77,7 +75,7 @@ class CreateTest extends React.Component {
                     </div>
 
                     <form>
-                        
+
                     </form>
 
                     <List>
@@ -135,7 +133,10 @@ class CreateTest extends React.Component {
                     open={this.state.openModal}
                     onClose={this.modalClose}
                 >
-                    <CreateQuiz />
+                    <CreateQuiz
+                        testID={this.state.test_id}
+                        onUpdate={this.addQuestion}
+                    />
                 </Modal>
 
             </main>

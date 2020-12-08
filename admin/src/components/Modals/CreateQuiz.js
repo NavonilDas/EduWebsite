@@ -7,6 +7,10 @@ import { Button, Checkbox, FormControlLabel, TextField } from '@material-ui/core
 import '../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import { DropzoneDialog } from 'material-ui-dropzone';
 
+import axios from 'axios';
+import API from '../../Api';
+const { HOST } = API;
+
 class CreateQuiz extends React.Component {
     constructor(props) {
         super(props);
@@ -89,37 +93,61 @@ class CreateQuiz extends React.Component {
             alert("Answer is Empty!");
             return;
         }
-        const body = {
-            question: markup,
-            answers: [
-                this.state.opt1,
-                this.state.opt2,
-                this.state.opt3,
-                this.state.opt4,
-            ],
-            solution: [],
-            quizId: "",
-            files: this.state.files
-        };
+        // TODO: Check IF Option is Duplicate
 
+        const solution = [];
         if (this.state.ans1) {
-            body.solution.push(this.state.opt1);
+            solution.push(this.state.opt1);
         }
         if (this.state.ans2) {
-            body.solution.push(this.state.opt2);
+            solution.push(this.state.opt2);
         }
         if (this.state.ans3) {
-            body.solution.push(this.state.opt3);
+            solution.push(this.state.opt3);
         }
         if (this.state.ans4) {
-            body.solution.push(this.state.opt4);
+            solution.push(this.state.opt4);
         }
 
-        console.log(body);
-        // TODO: Call API
-        if (this.props.onClose) {
-            this.props.onClose();
+        const body = new FormData();
+        body.append("question", markup);
+        body.append("options", JSON.stringify([
+            this.state.opt1,
+            this.state.opt2,
+            this.state.opt3,
+            this.state.opt4,
+        ]));
+        body.append("answer", JSON.stringify(solution));
+        if (this.state.files.length > 0) {
+            body.append('image', this.state.files[0]);
         }
+
+        const config = {
+            withCredentials: true,
+            headers: {
+                'content-type': 'multipart/form-data'
+            }
+        };
+
+        let request = null;
+        // TODO: Update
+        request = axios.post(`${HOST}test/add/${this.props.testID}`, body, config);
+        request
+            .then(res => {
+                if (res.data) {
+                    if (this.props.onUpdate) {
+                        this.props.onUpdate(res.data);
+                    }
+                }
+            })
+            .catch(err => {
+                if (err.response && err.response.data && err.response.data.error) {
+                    this.setState({ apiError: 'Error :  ' + err.response.data.error });
+                } else {
+                    this.setState({ apiError: '' + err });
+                }
+            });
+
     }
 
     render() {
@@ -137,7 +165,7 @@ class CreateQuiz extends React.Component {
                 </div>
                 <br />
                 <Button variant="contained" onClick={this.handleOpen}>
-                    Add Images
+                    Add Image
                 </Button>
 
                 <div className="d-flex" style={{ flexDirection: "column", margin: "10px" }}>
@@ -238,6 +266,7 @@ class CreateQuiz extends React.Component {
                     }
 
                 </div>
+
                 <div className="d-flex">
                     <Button variant="contained" color="primary" onClick={this.submit} style={{ marginLeft: "auto" }}>
                         Submit

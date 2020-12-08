@@ -39,7 +39,6 @@ class Login extends React.Component {
             username: this.state.username,
             password: this.state.password
         };
-        console.log(body);
         axios.post(`${HOST}users/admin/login`, body, { headers: {} })
             .then(res => {
                 if (res.data && res.data.token) {

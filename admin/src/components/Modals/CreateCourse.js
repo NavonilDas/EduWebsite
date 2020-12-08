@@ -92,7 +92,7 @@ class CreateCourse extends React.Component {
             }
         };
 
-        let request = null
+        let request = null;
         if (this.props.item) {
             request = axios.put(`${HOST}courses/${this.props.item._id}`, body, config)
         } else {
