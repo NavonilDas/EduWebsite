@@ -1,7 +1,11 @@
-import { Button, Card, CardActions, CardContent, Checkbox, FormControlLabel, List, ListItem, Modal } from '@material-ui/core';
+import { Button, Card, CardActions, CardContent, Checkbox, FormControlLabel, List, ListItem, Modal, Typography } from '@material-ui/core';
 import React from 'react';
 import CreateQuiz from './components/Modals/CreateQuiz';
 import NavBar from './components/NavBar';
+
+import axios from 'axios';
+import API from './Api';
+const { HOST } = API;
 
 class CreateTest extends React.Component {
     constructor(props) {
@@ -10,6 +14,7 @@ class CreateTest extends React.Component {
         this.state = {
             test_id: this.props.match.params.id,
             testName: "Create Test",
+            description: "",
             openModal: false,
             questions: []
         };
@@ -20,10 +25,7 @@ class CreateTest extends React.Component {
         this.addQuestion = this.addQuestion.bind(this);
     }
     componentDidMount() {
-        if (this.state.test_id) {
-            // Test is already Created
-            // TODO: Fetch Question
-        }
+        this.addQuestion();
     }
 
     modalClose() {
@@ -39,44 +41,50 @@ class CreateTest extends React.Component {
         console.log(index);
     }
 
-    addQuestion(que) {
-        console.log(que);
+    addQuestion() {
         this.setState({
             openModal: false
         });
+        if (this.state.test_id) {
+            axios.get(`${HOST}test/admin/${this.state.test_id}`, { withCredentials: true })
+                .then(res => {
+                    this.setState({
+                        questions: res.data.questions,
+                        testName: res.data.title,
+                        description: res.data.description
+                    });
+                })
+                .catch(err => {
+                    if (err.response && err.response.data && err.response.data.error) {
+                        this.setState({ apiError: 'Error :  ' + err.response.data.error });
+                    } else {
+                        this.setState({ apiError: '' + err });
+                    }
+                });
+
+        }
     }
 
     render() {
         // Sample Questions
-        const questions = [
-            {
-                question: "<p><b>Hello</b> This i Question</p>",
-                options: ["Option 1", "Option 2", "Option 3", "Option 4"],
-                answer: ["Option 2"],
-                images: []
-            },
-            {
-                question: "<p>Hello This i <b>Question</b></p>",
-                options: ["Option 1", "Option 2", "Option 3", "Option 4"],
-                answer: ["Option 1", "Option 4"],
-                images: ['https://upload.wikimedia.org/wikipedia/commons/9/91/LampFlowchart.svg']
-            },
-        ];
+        const questions = this.state.questions;
+        console.log(questions.length);
 
         return (
             <main className="admin-content">
                 <NavBar title={this.state.testName} />
                 <div className="admin-body">
+
+                    <Typography variant="body1" gutterBottom>
+                        {this.state.description}
+                    </Typography>
+
                     <div className="d-flex">
                         <h2 style={{ flexGrow: 1 }}>Questions</h2>
                         <Button variant="contained" color="primary" onClick={this.openModal}>
                             Add
                         </Button>
                     </div>
-
-                    <form>
-
-                    </form>
 
                     <List>
                         {questions.map((ele, ind) => (
@@ -85,9 +93,6 @@ class CreateTest extends React.Component {
                                     <CardContent>
                                         <div dangerouslySetInnerHTML={{ __html: ele.question }}></div>
                                         <div className="test-imgs">
-                                            {ele.images.map((src, j) => (
-                                                <img src={src} alt={`opt${j}`} key={j} />
-                                            ))}
                                         </div>
 
                                         <div className="test-options d-flex">

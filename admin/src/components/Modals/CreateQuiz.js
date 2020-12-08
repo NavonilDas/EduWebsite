@@ -136,7 +136,7 @@ class CreateQuiz extends React.Component {
             .then(res => {
                 if (res.data) {
                     if (this.props.onUpdate) {
-                        this.props.onUpdate(res.data);
+                        this.props.onUpdate();
                     }
                 }
             })
