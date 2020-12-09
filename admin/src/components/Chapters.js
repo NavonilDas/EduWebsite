@@ -46,6 +46,8 @@ class Chapters extends React.Component {
             selected: null
         };
 
+        this.positions = [];
+
         this.openModal = this.openModal.bind(this);
         this.modalClose = this.modalClose.bind(this);
         this.update = this.update.bind(this);
@@ -68,7 +70,14 @@ class Chapters extends React.Component {
 
     componentDidMount() {
         this.update();
+        let start = null;
         $("#chapter-list").sortable({
+            update: (_, ui) => {
+                this.positions.push([start, ui.item.index()]);
+            },
+            start: (_, ui) => {
+                start = ui.item.index();
+            }
         }).disableSelection();
     }
 
