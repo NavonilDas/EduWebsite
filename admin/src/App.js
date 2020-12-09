@@ -12,6 +12,7 @@ import ViewCourse from './components/ViewCourse';
 import Users from './components/Users';
 import Courses from './components/Courses';
 import AddContent from './components/AddContent';
+import Analysis from './components/Analysis/index'
 
 import axios from 'axios';
 import API from './Api';
@@ -59,6 +60,7 @@ class App extends React.Component {
             <Route path="/course/:id" exact component={ViewCourse} />
             <Route path="/content/:chapterID" exact component={AddContent} />
             <Route path="/edit/content/:contentID" exact component={AddContent} />
+            <Route path="/dashboard" exact component={Analysis} />
           </Switch>
         </div>
       </Router>
