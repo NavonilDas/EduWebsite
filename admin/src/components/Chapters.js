@@ -190,7 +190,7 @@ class Chapters extends React.Component {
                         <Button
                             variant="contained"
                             color="primary"
-                            style={{ marginLeft: "1em" }}
+                            style={{ marginLeft: "1em", backgroundColor: "#fa7d00" }}
                             onClick={() => this.setState({ openModal: true, addVideo: true })}
                         >
                             Add Video

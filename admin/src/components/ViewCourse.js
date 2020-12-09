@@ -39,17 +39,16 @@ class ViewCourse extends React.Component {
             openModal: false,
             apiError: "",
             selected: null,
-            openTest: false
+            openTest: false,
         };
-
-        this.save_btn = React.createRef();
-        this.change = this.change.bind(this);
+        this.positions = [];
         this.expandDetail = this.expandDetail.bind(this);
         this.openModal = this.openModal.bind(this);
         this.modalClose = this.modalClose.bind(this);
         this.update = this.update.bind(this);
         this.delete = this.delete.bind(this);
         this.editChapter = this.editChapter.bind(this);
+        this.savePositions = this.savePositions.bind(this);
     }
 
     modalClose() {
@@ -60,22 +59,56 @@ class ViewCourse extends React.Component {
         this.setState({ openModal: true });
     }
 
-    change(event, ui) {
-        if (this.save_btn?.current) {
-            console.log(this.save_btn);
-            this.setState({ saveChanges: true });
-        }
-    }
-
     componentDidMount() {
         this.update();
-
+        let start = null, end = null;
         $("#course-chapters").sortable({
-            update: this.change
+            update: (_, ui) => {
+                end = ui.item.index();
+                this.positions.push([start, end]);
+                this.setState({ saveChanges: true });
+            },
+            start: (_, ui) => {
+                start = ui.item.index();
+            }
         }).disableSelection();
         this.setState({
             items: []
         });
+    }
+
+    savePositions() {
+        let items = this.state.items;
+        for (const pos of this.positions) {
+            items = items.map((ele, ind) => {
+                if (ind === +pos[0]) {
+                    ele.position = +pos[1];
+                } else if (ind === +pos[1]) {
+                    ele.position = +pos[0];
+                }
+                return ele;
+            });
+        }
+        const tmp = {
+            chapters: [],
+            quiz: []
+        };
+
+        for (const item of items) {
+            if (item.name) {
+                tmp.chapters.push({
+                    id: item._id,
+                    position: item.position
+                });
+            } else {
+                tmp.quiz.push({
+                    id: item._id,
+                    position: item.position
+                });
+            }
+        }
+        // TODO: Request
+        console.log(tmp);
     }
 
     delete(eve, ele) {
@@ -142,7 +175,7 @@ class ViewCourse extends React.Component {
             items: this.state.items.map((ele, i) => {
                 if (i === index) {
                     ele.expand = !ele.expand;
-                }
+                } else ele.expand = false;
                 return ele;
             })
         });
@@ -168,6 +201,7 @@ class ViewCourse extends React.Component {
     }
 
     render() {
+        console.log(this.state.items)
         return (
             <main className="admin-content">
                 <NavBar title={(this.state.crsName) ? this.state.crsName : 'Course Title'} />
@@ -197,8 +231,7 @@ class ViewCourse extends React.Component {
                             variant="contained"
                             color="secondary"
                             disabled={!this.state.saveChanges}
-                            ref={this.save_btn}
-                            onClick={() => this.savePositions}
+                            onClick={this.savePositions}
                         >
                             Save Changes
                         </Button>
