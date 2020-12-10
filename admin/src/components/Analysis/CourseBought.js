@@ -77,7 +77,7 @@ class CourseBought extends React.Component {
 
   render() {
     return (
-      <Paper style={{ padding: "16px" }}>
+      <Paper className="analysis-paper">
         <Typography variant="h4" gutterBottom>
           Course Bought
         </Typography>

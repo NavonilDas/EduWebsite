@@ -17,7 +17,7 @@ class BarChart extends React.Component {
         datasets: [
           {
             label: this.props.title || "",
-            data: this.props.data || [10, 20, 30, 40, 50, 60, 70, 80],
+            data: this.props.data || [],
             backgroundColor:
               this.props.backgroundColor || "rgb(155, 205, 206,0.5)",
             borderColor: this.props.borderColor || "rgb(155, 205, 206)",
