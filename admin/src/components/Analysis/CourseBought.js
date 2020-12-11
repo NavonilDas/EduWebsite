@@ -24,30 +24,15 @@ class CourseBought extends React.Component {
       data: [],
     };
 
+    this.getData = this.getData.bind(this);
     this.onChange = this.onChange.bind(this);
   }
 
   componentDidMount() {
-    const date = new Date();
-    const time = `${date.getDate()}-${date.getMonth()}-${date.getFullYear()}`;
-    axios
-      .get(`${HOST}analysis/weekly?time=${time}`, {
-        withCredentials: true,
-      })
-      .then((res) => {
-        this.setState({
-          data: res.data.data,
-          title: res.data.title,
-          labels: res.data.labels,
-        });
-      })
-      .catch(errorHandler);
+    this.getData(this.state.selected);
   }
 
-  onChange(event) {
-    const { value } = event.target;
-    this.setState({ selected: value, labels: [] });
-
+  getData(value) {
     const date = new Date();
     const time = `${date.getDate()}-${date.getMonth()}-${date.getFullYear()}`;
     let request = null;
@@ -72,7 +57,13 @@ class CourseBought extends React.Component {
           labels: res.data.labels,
         });
       })
-      .catch(errorHandler);
+      .catch((err) => errorHandler(err, this));
+  }
+
+  onChange(event) {
+    const { value } = event.target;
+    this.setState({ selected: value, labels: [] });
+    this.getData(value);
   }
 
   render() {

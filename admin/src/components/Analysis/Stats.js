@@ -8,6 +8,10 @@ import {
 } from "@material-ui/core";
 import React from "react";
 
+import axios from "axios";
+import API, { errorHandler } from "../../Api";
+const { HOST } = API;
+
 class Stats extends React.Component {
   constructor(props) {
     super(props);
@@ -15,10 +19,55 @@ class Stats extends React.Component {
       selected: "1",
       labels: [],
       title: "",
-      data: "1000",
+      data: "",
     };
+
+    this.getCounts = this.getCounts.bind(this);
+    this.onChange = this.onChange.bind(this);
   }
-  componentDidMount() {}
+
+  onChange(event) {
+    const { value } = event.target;
+    this.setState({ selected: value, data: "" });
+    this.getCounts(value);
+  }
+
+  getCounts(value) {
+    let request = null;
+    const options = {
+      withCredentials: true,
+    };
+
+    if (value === "2") {
+      request = axios.get(`${HOST}chapters/analysis/count`, options);
+    } else if (value === "3") {
+      request = axios.get(`${HOST}courses/analysis/count`, options);
+    } else if (value === "4") {
+      request = axios.get(`${HOST}topics/analysis/count`, options);
+    } else if (value === "5") {
+      request = axios.get(`${HOST}videos/analysis/count`, options);
+    } else if (value === "6") {
+      request = axios.get(`${HOST}test/analysis/count`, options);
+    } else if (value === "7") {
+      request = axios.get(`${HOST}test/analysis/questions/count`, options);
+    } else {
+      request = axios.get(`${HOST}categories/analysis/count`, options);
+    }
+    request
+      .then((res) => {
+        if (res.data.count) {
+          this.setState({
+            data: res.data.count,
+          });
+        }
+      })
+      .catch((err) => errorHandler(err, this));
+  }
+
+  componentDidMount() {
+    this.getCounts(this.state.selected);
+  }
+
   render() {
     return (
       <Paper className="analysis-paper">
@@ -30,7 +79,11 @@ class Stats extends React.Component {
 
             <FormControl>
               <InputLabel id="stats-select-id">Select</InputLabel>
-              <Select labelId="stats-select-id" value={this.state.selected}>
+              <Select
+                labelId="stats-select-id"
+                value={this.state.selected}
+                onChange={this.onChange}
+              >
                 <MenuItem value="1">Categories</MenuItem>
                 <MenuItem value="2">Chapters</MenuItem>
                 <MenuItem value="1">Courses</MenuItem>
@@ -38,7 +91,7 @@ class Stats extends React.Component {
                 <MenuItem value="4">Topics</MenuItem>
                 <MenuItem value="5">Videos</MenuItem>
                 <MenuItem value="6">Quizs</MenuItem>
-                <MenuItem value="6">Questions</MenuItem>
+                <MenuItem value="7">Questions</MenuItem>
               </Select>
             </FormControl>
           </div>
