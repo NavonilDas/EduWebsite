@@ -43,12 +43,14 @@ class Stats extends React.Component {
     } else if (value === "3") {
       request = axios.get(`${HOST}courses/analysis/count`, options);
     } else if (value === "4") {
-      request = axios.get(`${HOST}topics/analysis/count`, options);
+      request = axios.get(`${HOST}users/analysis/count`, options);
     } else if (value === "5") {
-      request = axios.get(`${HOST}videos/analysis/count`, options);
+      request = axios.get(`${HOST}topics/analysis/count`, options);
     } else if (value === "6") {
-      request = axios.get(`${HOST}test/analysis/count`, options);
+      request = axios.get(`${HOST}videos/analysis/count`, options);
     } else if (value === "7") {
+      request = axios.get(`${HOST}test/analysis/count`, options);
+    } else if (value === "8") {
       request = axios.get(`${HOST}test/analysis/questions/count`, options);
     } else {
       request = axios.get(`${HOST}categories/analysis/count`, options);
@@ -86,12 +88,12 @@ class Stats extends React.Component {
               >
                 <MenuItem value="1">Categories</MenuItem>
                 <MenuItem value="2">Chapters</MenuItem>
-                <MenuItem value="1">Courses</MenuItem>
-                <MenuItem value="3">Users</MenuItem>
-                <MenuItem value="4">Topics</MenuItem>
-                <MenuItem value="5">Videos</MenuItem>
-                <MenuItem value="6">Quizs</MenuItem>
-                <MenuItem value="7">Questions</MenuItem>
+                <MenuItem value="3">Courses</MenuItem>
+                <MenuItem value="4">Users</MenuItem>
+                <MenuItem value="5">Topics</MenuItem>
+                <MenuItem value="6">Videos</MenuItem>
+                <MenuItem value="7">Quizs</MenuItem>
+                <MenuItem value="8">Questions</MenuItem>
               </Select>
             </FormControl>
           </div>

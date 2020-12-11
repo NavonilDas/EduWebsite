@@ -34,21 +34,22 @@ class CourseBought extends React.Component {
 
   getData(value) {
     const date = new Date();
+    const options = {
+      withCredentials: true,
+    };
+    
     const time = `${date.getDate()}-${date.getMonth()}-${date.getFullYear()}`;
+    
     let request = null;
+    
     if (value === "20") {
-      request = axios.get(`${HOST}analysis/monthly?time=${time}`, {
-        withCredentials: true,
-      });
+      request = axios.get(`${HOST}analysis/monthly?time=${time}`, options);
     } else if (value === "30") {
-      request = axios.get(`${HOST}analysis/yearly?time=${time}`, {
-        withCredentials: true,
-      });
+      request = axios.get(`${HOST}analysis/yearly?time=${time}`, options);
     } else {
-      request = axios.get(`${HOST}analysis/weekly?time=${time}`, {
-        withCredentials: true,
-      });
+      request = axios.get(`${HOST}analysis/weekly?time=${time}`, options);
     }
+
     request
       .then((res) => {
         this.setState({
