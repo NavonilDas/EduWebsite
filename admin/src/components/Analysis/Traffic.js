@@ -10,6 +10,10 @@ import {
 
 import Line from "../ChartJS/Line";
 
+import axios from "axios";
+import API, { errorHandler } from "../../Api";
+const { HOST } = API;
+
 class Traffic extends React.Component {
   constructor(props) {
     super(props);
@@ -18,7 +22,7 @@ class Traffic extends React.Component {
       title: "",
       selected: "1",
       data: [],
-      income: 0,
+      total: 0,
     };
 
     this.getData = this.getData.bind(this);
@@ -26,7 +30,42 @@ class Traffic extends React.Component {
   }
 
   getData(value) {
-    console.log(value);
+    const date = new Date();
+    const options = {
+      withCredentials: true,
+    };
+
+    const time = `${date.getDate()}-${date.getMonth()}-${date.getFullYear()}`;
+
+    let request = null;
+
+    if (value === "1") {
+      request = axios.get(
+        `${HOST}analysis/traffic/weekly?time=${time}`,
+        options
+      );
+    } else if (value === "2") {
+      request = axios.get(
+        `${HOST}analysis/traffic/monthly?time=${time}`,
+        options
+      );
+    } else {
+      request = axios.get(
+        `${HOST}analysis/traffic/yearly?time=${time}`,
+        options
+      );
+    }
+
+    request
+      .then((res) => {
+        this.setState({
+          total: res.data.total,
+          data: res.data.data,
+          title: res.data.title,
+          labels: res.data.labels,
+        });
+      })
+      .catch((err) => errorHandler(err, this));
   }
 
   componentDidMount() {
@@ -52,7 +91,7 @@ class Traffic extends React.Component {
               gutterBottom
               style={{ margin: "auto", marginLeft: "11px" }}
             >
-              {this.state.income}
+              {this.state.total}
             </Typography>
           </div>
         </div>
