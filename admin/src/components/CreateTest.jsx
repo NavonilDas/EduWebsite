@@ -1,10 +1,10 @@
 import { Button, Card, CardActions, CardContent, Checkbox, FormControlLabel, List, ListItem, Modal, Snackbar, Typography } from '@material-ui/core';
 import React from 'react';
-import CreateQuiz from './components/Modals/CreateQuiz';
-import NavBar from './components/NavBar';
+import CreateQuiz from './Modals/CreateQuiz';
+import NavBar from './NavBar';
 
 import axios from 'axios';
-import API from './Api';
+import API from '../Api';
 import { Alert } from '@material-ui/lab';
 const { HOST } = API;
 
