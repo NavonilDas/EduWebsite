@@ -136,8 +136,9 @@ a {
   font-size: 1.5em;
 }
 
-.analysis-paper{
+.analysis-paper {
   padding: 15px;
   margin: 11px;
   width: fit-content;
+  height: fit-content;
 }
