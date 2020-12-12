@@ -9,6 +9,10 @@ import {
 } from "@material-ui/core";
 import Line from "../ChartJS/Line";
 
+import axios from "axios";
+import API, { errorHandler } from "../../Api";
+const { HOST } = API;
+
 class Income extends React.Component {
   constructor(props) {
     super(props);
@@ -19,6 +23,9 @@ class Income extends React.Component {
       data: [],
       income: 0,
     };
+
+    this.getData = this.getData.bind(this);
+    this.onChange = this.onChange.bind(this);
   }
 
   componentDidMount() {
@@ -26,7 +33,41 @@ class Income extends React.Component {
   }
 
   getData(value) {
-      
+    const date = new Date();
+    const options = {
+      withCredentials: true,
+    };
+
+    const time = `${date.getDate()}-${date.getMonth()}-${date.getFullYear()}`;
+
+    let request = null;
+
+    if (value === "1") {
+      request = axios.get(
+        `${HOST}analysis/income/weekly?time=${time}`,
+        options
+      );
+    } else if (value === "2") {
+      request = axios.get(
+        `${HOST}analysis/income/monthly?time=${time}`,
+        options
+      );
+    } else {
+      request = axios.get(
+        `${HOST}analysis/income/yearly?time=${time}`,
+        options
+      );
+    }
+    request
+      .then((res) => {
+        this.setState({
+          income: res.data.total,
+          data: res.data.data,
+          title: res.data.title,
+          labels: res.data.labels,
+        });
+      })
+      .catch((err) => errorHandler(err, this));
   }
 
   onChange(event) {
