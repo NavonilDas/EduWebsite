@@ -9,8 +9,7 @@ import {
 import React from "react";
 
 import axios from "axios";
-import API, { errorHandler } from "../../Api";
-const { HOST } = API;
+import { HOST, errorHandler } from "../../Api";
 
 class Stats extends React.Component {
   constructor(props) {

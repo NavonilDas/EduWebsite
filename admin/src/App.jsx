@@ -14,8 +14,7 @@ import AddContent from "./components/AddContent";
 import Analysis from "./components/Analysis/index";
 
 import axios from "axios";
-import API from "./Api";
-const { HOST } = API;
+import { HOST } from "./Api";
 
 class App extends React.Component {
   constructor(props) {

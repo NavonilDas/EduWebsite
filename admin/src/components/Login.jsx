@@ -2,8 +2,7 @@ import { Button, Card, CardContent, TextField } from '@material-ui/core';
 import React from 'react';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import axios from 'axios';
-import API from '../Api';
-const { HOST } = API;
+import { HOST } from '../Api';
 
 
 class Login extends React.Component {

@@ -11,8 +11,7 @@ import {
 import PieChart from "../ChartJS/PieChart";
 
 import axios from "axios";
-import API, { errorHandler } from "../../Api";
-const { HOST } = API;
+import { HOST, errorHandler } from "../../Api";
 
 class DeviceTraffic extends React.Component {
   static bgColors = ["#ff3d67", "#059bff", "#ffc233"];

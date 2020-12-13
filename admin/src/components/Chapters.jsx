@@ -19,8 +19,7 @@ import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled'; // Video
 import WebAssetIcon from '@material-ui/icons/WebAsset'; // Media
 
 import axios from 'axios';
-import API from '../Api';
-const { HOST } = API;
+import { HOST } from '../Api';
 
 class Chapters extends React.Component {
 

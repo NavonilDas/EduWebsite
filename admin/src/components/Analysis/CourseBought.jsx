@@ -10,8 +10,7 @@ import React from "react";
 import BarChart from "../ChartJS/BarChart";
 
 import axios from "axios";
-import API, { errorHandler } from "../../Api";
-const { HOST } = API;
+import { HOST, errorHandler } from "../../Api";
 
 class CourseBought extends React.Component {
   static weeks = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -37,11 +36,11 @@ class CourseBought extends React.Component {
     const options = {
       withCredentials: true,
     };
-    
+
     const time = `${date.getDate()}-${date.getMonth()}-${date.getFullYear()}`;
-    
+
     let request = null;
-    
+
     if (value === "20") {
       request = axios.get(`${HOST}analysis/monthly?time=${time}`, options);
     } else if (value === "30") {

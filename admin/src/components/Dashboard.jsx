@@ -15,8 +15,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 
 import axios from 'axios';
-import API from '../Api';
-const { HOST, IMG } = API;
+import { HOST, IMG } from '../Api';
 
 class Dashboard extends React.Component {
     constructor(props) {

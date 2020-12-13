@@ -3,8 +3,7 @@ import { DropzoneDialog } from 'material-ui-dropzone';
 import React from 'react';
 
 import axios from 'axios';
-import API from '../../Api';
-const { HOST } = API;
+import { HOST } from "../../Api";
 
 
 class AddMedia extends React.Component {

@@ -2,8 +2,7 @@ import React from 'react';
 import pdfobject from 'pdfobject';
 
 import axios from 'axios';
-import API from '../../Api';
-const { HOST, IMG } = API;
+import { HOST, IMG } from "../../Api";
 
 
 class ViewContent extends React.Component {

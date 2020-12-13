@@ -10,8 +10,7 @@ import {
 import Line from "../ChartJS/Line";
 
 import axios from "axios";
-import API, { errorHandler } from "../../Api";
-const { HOST } = API;
+import { HOST, errorHandler } from "../../Api";
 
 class Income extends React.Component {
   constructor(props) {

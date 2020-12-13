@@ -2,8 +2,7 @@ import { Button, TextField } from '@material-ui/core';
 import React from 'react';
 
 import axios from 'axios';
-import API from '../../Api';
-const { HOST } = API;
+import { HOST } from "../../Api";
 
 
 class CreateTest extends React.Component {

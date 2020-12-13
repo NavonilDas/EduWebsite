@@ -8,11 +8,10 @@ import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
 import PhotoLibraryIcon from '@material-ui/icons/PhotoLibrary';
 import PickImage from './Modals/PickImage';
+import { Alert } from '@material-ui/lab';
 
 import axios from 'axios';
-import API from '../Api';
-import { Alert } from '@material-ui/lab';
-const { HOST } = API;
+import { HOST } from '../Api';
 
 
 class AddContent extends React.Component {

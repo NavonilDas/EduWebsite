@@ -2,11 +2,10 @@ import { Button, Card, CardActions, CardContent, Checkbox, FormControlLabel, Lis
 import React from 'react';
 import CreateQuiz from './Modals/CreateQuiz';
 import NavBar from './NavBar';
+import { Alert } from '@material-ui/lab';
 
 import axios from 'axios';
-import API from '../Api';
-import { Alert } from '@material-ui/lab';
-const { HOST } = API;
+import { HOST } from '../Api';
 
 class CreateTest extends React.Component {
     constructor(props) {

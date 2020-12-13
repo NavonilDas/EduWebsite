@@ -1,10 +1,10 @@
-const API = {
-    HOST: 'http://localhost:4000/',
-    // CDN or any URL
-    IMG: 'http://localhost:4000/static/'
-};
+const HOST = 'http://localhost:4000/';
+const IMG = 'http://localhost:4000/static/';
 
-export default API;
+export {
+    HOST,
+    IMG
+};
 
 export function errorHandler(err, ctx) {
     console.error(err);

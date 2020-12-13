@@ -11,8 +11,7 @@ import CreateCourse from './Modals/CreateCourse';
 import { Modal } from '@material-ui/core';
 
 import axios from 'axios';
-import API from '../Api';
-const { HOST, IMG } = API;
+import { HOST, IMG } from '../Api';
 
 
 class Courses extends React.Component {
