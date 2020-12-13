@@ -107,7 +107,12 @@ class ViewCourse extends React.Component {
             }
         }
         // TODO: Request
-        console.log(tmp);
+        
+        axios.post(`${HOST}content/course`, tmp, { withCredentials: true })
+            .then(res => {
+                this.setState({ saveChanges: false });
+            })
+            .catch(err => errorHandler(err, this));
     }
 
     delete(eve, ele) {
@@ -147,7 +152,7 @@ class ViewCourse extends React.Component {
         axios.get(`${HOST}content/course/${this.state.course_id}`)
             .then(res => {
                 if (res.data) {
-                    this.setState({ items: res.data });
+                    this.setState({ items: res.data.sort((a, b) => (+a.position) - (+b.position)) });
                 }
             })
             .catch((err) => errorHandler(err, this));
@@ -180,7 +185,6 @@ class ViewCourse extends React.Component {
     }
 
     render() {
-        console.log(this.state.items)
         return (
             <main className="admin-content">
                 <NavBar title={(this.state.crsName) ? this.state.crsName : 'Course Title'} />

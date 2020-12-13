@@ -13,12 +13,22 @@ class Anlaysis extends React.Component {
 
   render() {
     return (
-      <div style={{}}>
-        <CourseBought />
-        <Income />
-        <Traffic />
-        <Stats />
-        <DeviceTraffic />
+      <div className="row analysis-page">
+        <div className="col-lg-4">
+          <Stats />
+        </div>
+        <div className="col-lg-8">
+          <Income />
+        </div>
+        <div className="col-lg-6">
+          <CourseBought />
+        </div>
+        <div className="col-lg-6">
+          <DeviceTraffic />
+        </div>
+        <div className="col-lg-12">
+          <Traffic />
+        </div>
       </div>
     );
   }

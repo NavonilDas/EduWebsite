@@ -108,7 +108,7 @@ class Income extends React.Component {
 
         {this.state.labels.length > 0 ? (
           <Line
-            width="450px"
+            width="100%"
             title={this.state.title}
             labels={this.state.labels}
             data={this.state.data}

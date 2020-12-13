@@ -34,7 +34,6 @@ class Line extends React.Component {
         ref={this.canvas}
         style={{
           height: this.props.height || "300px",
-          width: this.props.width || "300px",
         }}
       />
     );

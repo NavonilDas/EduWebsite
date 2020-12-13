@@ -110,7 +110,6 @@ class Traffic extends React.Component {
 
         {this.state.labels.length > 0 ? (
           <Line
-            width="450px"
             title={this.state.title}
             labels={this.state.labels}
             data={this.state.data}

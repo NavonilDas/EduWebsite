@@ -85,7 +85,6 @@ class DeviceTraffic extends React.Component {
 
         {this.state.data.length > 0 ? (
           <PieChart
-            width="450px"
             title={this.state.title}
             labels={this.state.labels}
             data={this.state.data}
