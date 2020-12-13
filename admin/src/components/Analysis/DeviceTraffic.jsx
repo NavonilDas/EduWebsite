@@ -34,6 +34,28 @@ class DeviceTraffic extends React.Component {
   }
 
   getData(value) {
+    const options = {
+      withCredentials: true,
+    };
+
+    let request = null;
+
+    if (value === "1") {
+      request = axios.get(`${HOST}analysis/traffic/device/weekly`, options);
+    } else if (value === "2") {
+      request = axios.get(`${HOST}analysis/traffic/device/monthly`, options);
+    } else {
+      request = axios.get(`${HOST}analysis/traffic/device/yearly`, options);
+    }
+
+    request
+      .then((res) => {
+        if (res.data.android) {
+          const tmp = [res.data.web, res.data.android, res.data.ios];
+          this.setState({ data: tmp });
+        }
+      })
+      .catch((err) => errorHandler(err, this));
   }
 
   onChange(event) {
