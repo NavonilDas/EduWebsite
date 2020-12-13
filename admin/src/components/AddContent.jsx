@@ -11,7 +11,7 @@ import PickImage from './Modals/PickImage';
 import { Alert } from '@material-ui/lab';
 
 import axios from 'axios';
-import { HOST } from '../Api';
+import { errorHandler, HOST } from '../Api';
 
 
 class AddContent extends React.Component {
@@ -109,15 +109,7 @@ class AddContent extends React.Component {
 
                 }
             })
-            .catch(err => {
-                if (err.response && err.response.data && err.response.data.error) {
-                    this.setState({ apiError: 'Error: ' + err.response.data.error });
-                } else {
-                    this.setState({ apiError: '' + err });
-                }
-                console.error(err);
-            });
-
+            .catch((err) => errorHandler(err, this));
     }
 
     componentDidMount() {
@@ -136,17 +128,8 @@ class AddContent extends React.Component {
                         });
                     }
                 })
-                .catch(err => {
-                    if (err.response && err.response.data && err.response.data.error) {
-                        this.setState({ apiError: 'Error: ' + err.response.data.error });
-                    } else {
-                        this.setState({ apiError: '' + err });
-                    }
-                    console.error(err);
-                });
-
+                .catch((err) => errorHandler(err, this));
         }
-
     }
 
     render() {

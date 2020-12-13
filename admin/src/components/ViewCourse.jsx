@@ -17,7 +17,7 @@ import CreateChapter from './Modals/CreateChapter';
 import CreateTest from './Modals/CreateTest';
 
 import axios from 'axios';
-import { HOST } from '../Api';
+import { errorHandler, HOST } from '../Api';
 
 class ViewCourse extends React.Component {
     constructor(props) {
@@ -129,13 +129,7 @@ class ViewCourse extends React.Component {
                     });
                 }
             })
-            .catch(err => {
-                if (err.response && err.response.data && err.response.data.error) {
-                    this.setState({ apiError: 'Error :  ' + err.response.data.error });
-                } else {
-                    this.setState({ apiError: '' + err });
-                }
-            });
+            .catch((err) => errorHandler(err, this));
 
     }
 
@@ -156,14 +150,7 @@ class ViewCourse extends React.Component {
                     this.setState({ items: res.data });
                 }
             })
-            .catch(err => {
-                if (err.response && err.response.data && err.response.data.error) {
-                    this.setState({ apiError: 'Error: ' + err.response.data.error });
-                } else {
-                    this.setState({ apiError: '' + err });
-                }
-                console.error(err);
-            });
+            .catch((err) => errorHandler(err, this));
     }
 
     expandDetail(eve, ele, index) {
@@ -188,14 +175,7 @@ class ViewCourse extends React.Component {
                         });
                     }
                 })
-                .catch(err => {
-                    if (err.response && err.response.data && err.response.data.error) {
-                        this.setState({ apiError: 'Error: ' + err.response.data.error });
-                    } else {
-                        this.setState({ apiError: '' + err });
-                    }
-                    console.error(err);
-                });
+                .catch((err) => errorHandler(err, this));
         }
     }
 

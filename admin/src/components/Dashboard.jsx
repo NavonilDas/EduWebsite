@@ -15,7 +15,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 
 import axios from 'axios';
-import { HOST, IMG } from '../Api';
+import { errorHandler, HOST, IMG } from '../Api';
 
 class Dashboard extends React.Component {
     constructor(props) {
@@ -56,10 +56,7 @@ class Dashboard extends React.Component {
                     this.setState({ items: this.state.items.filter((ele) => ele._id !== id) });
                 }
             })
-            .catch(err => {
-                console.error(err);
-                this.setState({ apiError: '' + err });
-            });
+            .catch((err) => errorHandler(err, this));
     }
 
     shareCategory(slug) {
@@ -73,10 +70,7 @@ class Dashboard extends React.Component {
                     this.setState({ items: res.data });
                 }
             })
-            .catch(err => {
-                console.error(err);
-                this.setState({ apiError: '' + err });
-            });
+            .catch((err) => errorHandler(err, this));
     }
 
     render() {

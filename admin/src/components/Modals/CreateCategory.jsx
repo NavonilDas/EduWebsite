@@ -2,7 +2,7 @@ import { Button, TextField } from "@material-ui/core";
 import { DropzoneDialog } from "material-ui-dropzone";
 import React from "react";
 import axios from "axios";
-import { HOST } from "../../Api";
+import { errorHandler, HOST } from "../../Api";
 
 class CreateCategory extends React.Component {
   constructor(props) {
@@ -92,10 +92,7 @@ class CreateCategory extends React.Component {
           }
         }
       })
-      .catch((err) => {
-        console.error(err);
-        this.setState({ apiError: "" + err });
-      });
+      .catch((err) => errorHandler(err, this));
   }
 
   render() {

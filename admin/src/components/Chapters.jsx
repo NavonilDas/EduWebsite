@@ -19,7 +19,7 @@ import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled'; // Video
 import WebAssetIcon from '@material-ui/icons/WebAsset'; // Media
 
 import axios from 'axios';
-import { HOST } from '../Api';
+import { errorHandler, HOST } from '../Api';
 
 class Chapters extends React.Component {
 
@@ -143,14 +143,7 @@ class Chapters extends React.Component {
                     });
                 }
             })
-            .catch(err => {
-                if (err.response && err.response.data && err.response.data.error) {
-                    this.setState({ apiError: 'Error :  ' + err.response.data.error });
-                } else {
-                    this.setState({ apiError: '' + err });
-                }
-            });
-
+            .catch((err) => errorHandler(err, this));
     }
 
     update() {
@@ -163,15 +156,8 @@ class Chapters extends React.Component {
                     });
                 }
             })
-            .catch(err => {
-                if (err.response && err.response.data && err.response.data.error) {
-                    this.setState({ apiError: 'Error: ' + err.response.data.error });
-                } else {
-                    this.setState({ apiError: '' + err });
-                }
-                console.error(err);
-            });
-    }
+            .catch((err) => errorHandler(err, this));
+        }
 
     render() {
         // const items = this.state.items;

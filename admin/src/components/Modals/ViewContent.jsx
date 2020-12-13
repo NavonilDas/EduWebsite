@@ -2,7 +2,7 @@ import React from 'react';
 import pdfobject from 'pdfobject';
 
 import axios from 'axios';
-import { HOST, IMG } from "../../Api";
+import { errorHandler, HOST, IMG } from "../../Api";
 
 
 class ViewContent extends React.Component {
@@ -29,13 +29,7 @@ class ViewContent extends React.Component {
                         });
                     }
                 })
-                .catch(err => {
-                    if (err.response && err.response.data && err.response.data.error) {
-                        this.setState({ apiError: 'Error :  ' + err.response.data.error });
-                    } else {
-                        this.setState({ apiError: '' + err });
-                    }
-                });
+                .catch((err) => errorHandler(err, this));
         }
         else if (this.props.selected.media) {
             axios.get(`${HOST}media/${this.props.selected._id}`, { withCredentials: true })
@@ -53,13 +47,7 @@ class ViewContent extends React.Component {
                         });
                     }
                 })
-                .catch(err => {
-                    if (err.response && err.response.data && err.response.data.error) {
-                        this.setState({ apiError: 'Error :  ' + err.response.data.error });
-                    } else {
-                        this.setState({ apiError: '' + err });
-                    }
-                });
+                .catch((err) => errorHandler(err, this));
         } else {
             // TOPIC
             axios.get(`${HOST}topics/${this.props.selected._id}`, { withCredentials: true })
@@ -69,14 +57,7 @@ class ViewContent extends React.Component {
                         mediaType: "topic"
                     });
                 })
-                .catch(err => {
-                    if (err.response && err.response.data && err.response.data.error) {
-                        this.setState({ apiError: 'Error :  ' + err.response.data.error });
-                    } else {
-                        this.setState({ apiError: '' + err });
-                    }
-                });
-
+                .catch((err) => errorHandler(err, this));
         }
     }
 

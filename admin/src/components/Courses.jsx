@@ -11,7 +11,7 @@ import CreateCourse from './Modals/CreateCourse';
 import { Modal } from '@material-ui/core';
 
 import axios from 'axios';
-import { HOST, IMG } from '../Api';
+import { errorHandler, HOST, IMG } from '../Api';
 
 
 class Courses extends React.Component {
@@ -58,13 +58,7 @@ class Courses extends React.Component {
                     });
                 }
             })
-            .catch(err => {
-                if (err.response && err.response.data && err.response.data.error) {
-                    this.setState({ apiError: 'Error :  ' + err.response.data.error });
-                } else {
-                    this.setState({ apiError: '' + err });
-                }
-            });
+            .catch((err) => errorHandler(err, this));
     }
 
     editCourse(item) {
@@ -86,14 +80,7 @@ class Courses extends React.Component {
                     items: res.data
                 });
             })
-            .catch(err => {
-                if (err.response && err.response.data && err.response.data.error) {
-                    this.setState({ apiError: 'Error: ' + err.response.data.error });
-                } else {
-                    this.setState({ apiError: '' + err });
-                }
-                console.error(err);
-            });
+            .catch((err) => errorHandler(err, this));
     }
 
     componentDidMount() {

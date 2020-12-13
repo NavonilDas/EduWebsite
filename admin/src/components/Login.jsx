@@ -2,7 +2,7 @@ import { Button, Card, CardContent, TextField } from '@material-ui/core';
 import React from 'react';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import axios from 'axios';
-import { HOST } from '../Api';
+import { errorHandler, HOST } from '../Api';
 
 
 class Login extends React.Component {
@@ -50,7 +50,7 @@ class Login extends React.Component {
                     }
                 }
             })
-            .catch(err => console.error(err));
+            .catch((err) => errorHandler(err, this));
 
         // TODO: Do a Post Request
     }

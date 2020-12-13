@@ -3,7 +3,7 @@ import { DropzoneDialog } from 'material-ui-dropzone';
 import React from 'react';
 
 import axios from 'axios';
-import { HOST } from "../../Api";
+import { errorHandler, HOST } from "../../Api";
 
 
 class CreateCourse extends React.Component {
@@ -106,14 +106,7 @@ class CreateCourse extends React.Component {
                     }
                 }
             })
-            .catch(err => {
-                if (err.response && err.response.data && err.response.data.error) {
-                    this.setState({ apiError: 'Error :  ' + err.response.data.error });
-                } else {
-                    this.setState({ apiError: '' + err });
-                }
-            });
-
+            .catch((err) => errorHandler(err, this));
     }
 
     render() {

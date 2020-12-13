@@ -14,7 +14,7 @@ import AddContent from "./components/AddContent";
 import Analysis from "./components/Analysis/index";
 
 import axios from "axios";
-import { HOST } from "./Api";
+import { errorHandler, HOST } from "./Api";
 
 class App extends React.Component {
   constructor(props) {
@@ -46,7 +46,7 @@ class App extends React.Component {
           this.setState({ isLogin: true });
         }
       })
-      .catch((err) => console.error(err));
+      .catch((err) => errorHandler(err, this));
   }
 
   dashboard() {

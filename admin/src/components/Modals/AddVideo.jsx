@@ -2,7 +2,7 @@ import { Button, TextField } from '@material-ui/core';
 import React from 'react';
 
 import axios from 'axios';
-import { HOST } from "../../Api";
+import { errorHandler, HOST } from "../../Api";
 
 
 class AddVideo extends React.Component {
@@ -55,13 +55,7 @@ class AddVideo extends React.Component {
                         });
                     }
                 })
-                .catch(err => {
-                    if (err.response && err.response.data && err.response.data.error) {
-                        this.setState({ apiError: 'Error :  ' + err.response.data.error });
-                    } else {
-                        this.setState({ apiError: '' + err });
-                    }
-                });
+                .catch((err) => errorHandler(err, this));
         }
     }
 
@@ -106,14 +100,7 @@ class AddVideo extends React.Component {
                     }
                 }
             })
-            .catch(err => {
-                if (err.response && err.response.data && err.response.data.error) {
-                    this.setState({ apiError: 'Error :  ' + err.response.data.error });
-                } else {
-                    this.setState({ apiError: '' + err });
-                }
-                console.error(err);
-            });
+            .catch((err) => errorHandler(err, this));
     }
 
     render() {

@@ -5,7 +5,7 @@ import NavBar from './NavBar';
 import { Alert } from '@material-ui/lab';
 
 import axios from 'axios';
-import { HOST } from '../Api';
+import { errorHandler, HOST } from '../Api';
 
 class CreateTest extends React.Component {
     constructor(props) {
@@ -46,14 +46,7 @@ class CreateTest extends React.Component {
                     questions: this.state.questions.filter(ele => ele._id !== id)
                 });
             })
-            .catch(err => {
-                if (err.response && err.response.data && err.response.data.error) {
-                    this.setState({ apiError: 'Error :  ' + err.response.data.error });
-                } else {
-                    this.setState({ apiError: '' + err });
-                }
-                console.error(err);
-            });
+            .catch((err) => errorHandler(err, this));
     }
 
     addQuestion(show) {
@@ -72,14 +65,7 @@ class CreateTest extends React.Component {
                         description: res.data.description
                     });
                 })
-                .catch(err => {
-                    if (err.response && err.response.data && err.response.data.error) {
-                        this.setState({ apiError: 'Error :  ' + err.response.data.error });
-                    } else {
-                        this.setState({ apiError: '' + err });
-                    }
-                });
-
+                .catch((err) => errorHandler(err, this));
         }
     }
 
