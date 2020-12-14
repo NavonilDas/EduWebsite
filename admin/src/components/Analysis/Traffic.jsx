@@ -110,13 +110,15 @@ class Traffic extends React.Component {
 
         {this.state.labels.length > 0 ? (
           <Line
+            backgroundColor="rgb(129,66,255,0.5)"
+            borderColor="rgb(129,66,255)"
             title={this.state.title}
             labels={this.state.labels}
             data={this.state.data}
           />
         ) : (
-          ""
-        )}
+            ""
+          )}
       </Paper>
     );
   }

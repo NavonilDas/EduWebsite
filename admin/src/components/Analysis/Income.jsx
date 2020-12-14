@@ -108,14 +108,15 @@ class Income extends React.Component {
 
         {this.state.labels.length > 0 ? (
           <Line
-            width="100%"
+            backgroundColor="rgb(255,145,36,0.5)"
+            borderColor="rgb(255,145,36)"
             title={this.state.title}
             labels={this.state.labels}
             data={this.state.data}
           />
         ) : (
-          ""
-        )}
+            ""
+          )}
       </Paper>
     );
   }
