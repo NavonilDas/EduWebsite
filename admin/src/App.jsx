@@ -15,6 +15,7 @@ import Analysis from "./components/Analysis/index";
 
 import axios from "axios";
 import { errorHandler, HOST } from "./Api";
+import Profile from "./components/Profile";
 
 class App extends React.Component {
   constructor(props) {
@@ -57,6 +58,7 @@ class App extends React.Component {
           <Switch>
             <Route path="/" exact component={Dashboard} />
             <Route path="/login" exact component={Login} />
+            <Route path="/profile" exact component={Profile} />
             <Route path="/category/:id" exact component={Courses} />
             <Route path="/create/category" exact component={Courses} />
             <Route path="/users" exact component={Users} />

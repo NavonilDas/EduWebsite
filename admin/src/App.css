@@ -142,7 +142,7 @@ a {
   height: fit-content;
 }
 
-.analysis-page{
+.analysis-page {
   width: calc(100% - 200px) !important;
 }
 
@@ -150,4 +150,18 @@ a {
   margin-bottom: 16px;
   margin-top: 16px;
   overflow-x: hidden;
+}
+
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+}
+
+.profile-form > div {
+  margin: 8px 0 8px 11px;
+}
+
+.profile-form > button {
+  margin: 11px;
 }
