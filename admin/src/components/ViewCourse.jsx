@@ -77,6 +77,7 @@ class ViewCourse extends React.Component {
     }
 
     savePositions() {
+        // FIXME: May Be Have some Errors on this approach
         let items = this.state.items;
         for (const pos of this.positions) {
             items = items.map((ele, ind) => {
@@ -106,11 +107,11 @@ class ViewCourse extends React.Component {
                 });
             }
         }
-        // TODO: Request
-        
+
         axios.post(`${HOST}content/course`, tmp, { withCredentials: true })
             .then(res => {
                 this.setState({ saveChanges: false });
+                this.positions = [];
             })
             .catch(err => errorHandler(err, this));
     }

@@ -42,7 +42,8 @@ class Chapters extends React.Component {
             viewSelected: false,
             items: [],
             apiError: "",
-            selected: null
+            selected: null,
+            saveChanges: false
         };
 
         this.positions = [];
@@ -51,6 +52,44 @@ class Chapters extends React.Component {
         this.modalClose = this.modalClose.bind(this);
         this.update = this.update.bind(this);
         this.viewItem = this.viewItem.bind(this);
+        this.savePositions = this.savePositions.bind(this);
+    }
+
+    savePositions() {
+        let items = JSON.parse(
+            JSON.stringify(
+                this.state.items
+            )
+        );
+
+        for (const pos of this.positions) {
+            const ele = items.splice(pos[0], 1);
+            if (ele && ele.length > 0) {
+                items.splice(pos[1], 0, ele[0]);
+            }
+        }
+        const body = {
+            video: [],
+            media: [],
+            quiz: [],
+            topic: []
+        };
+
+        for (let i = 0; i < items.length; ++i) {
+            const item = items[i];
+            let key = 'topic';
+            if (item.video) {
+                key = 'video';
+            } else if (item.media) {
+                key = 'media';
+            } else if (item.quiz) {
+                key = 'quiz';
+            }
+            body[key].push({ id: item._id, position: i });
+        }
+
+        // TODO: Send API Request
+        console.log(body);
     }
 
     modalClose() {
@@ -73,6 +112,7 @@ class Chapters extends React.Component {
         $("#chapter-list").sortable({
             update: (_, ui) => {
                 this.positions.push([start, ui.item.index()]);
+                this.setState({ saveChanges: true });
             },
             start: (_, ui) => {
                 start = ui.item.index();
@@ -157,10 +197,9 @@ class Chapters extends React.Component {
                 }
             })
             .catch((err) => errorHandler(err, this));
-        }
+    }
 
     render() {
-        // const items = this.state.items;
         const items = this.state.items;
         return (
             <main className="admin-content">
@@ -210,6 +249,19 @@ class Chapters extends React.Component {
                             }}
                         >
                             Add Media
+                        </Button>
+
+                    </div>
+
+                    <div className="d-flex" style={{ marginTop: "10px" }}>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            style={{ marginLeft: "auto", backgroundColor: "#9d34cf" }}
+                            disabled={!this.state.saveChanges}
+                            onClick={this.savePositions}
+                        >
+                            Save Changes
                         </Button>
 
                     </div>
