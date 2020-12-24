@@ -47,7 +47,28 @@ const Profile = () => {
     const [apiError, setApiError] = useState('');
 
     useEffect(() => {
-        // TODO: Fetch initial Values
+        axios.get(`${HOST}users/info`, { withCredentials: true, })
+            .then((res) => {
+                setSate({
+                    email: res.data.email,
+                    name: res.data.name,
+                    password: "",
+                    newpassword: ""
+                });
+            })
+            .catch((err) => {
+                console.error(err);
+                if (err?.response?.status === 401) {
+                    // Unauthorised Clear Cookie
+                    document.cookie = 'ID=;expires=Thu, 01 Jan 1970 00:00:00 GMT'; // Clear Cookie
+                    window.location = '/';
+                }
+                if (err.response?.data?.error && (typeof err.response.data.error) === 'string') {
+                    setApiError(err.response.data.error);
+                } else {
+                    setApiError("Something Went Wrong!");
+                }
+            });
     }, []);
 
     const formik = useFormik({
