@@ -27,6 +27,7 @@ class App extends React.Component {
   }
 
   componentDidMount() {
+    // TODO: Check if cookie is present
     this.onLogin();
   }
 

@@ -1,15 +1,30 @@
-import { Avatar, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, IconButton, InputLabel, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText, MenuItem, Select, TextField } from '@material-ui/core';
-import { Pagination } from '@material-ui/lab';
-import React from 'react';
-import NavBar from './NavBar';
-import DeleteIcon from '@material-ui/icons/Delete';
-import BlockIcon from '@material-ui/icons/Block';
+import {
+    Avatar,
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    IconButton,
+    List,
+    ListItem,
+    ListItemAvatar,
+    ListItemSecondaryAction,
+    ListItemText,
+    TextField,
+} from "@material-ui/core";
+import { Pagination } from "@material-ui/lab";
+import React from "react";
+import NavBar from "./NavBar";
+// import DeleteIcon from '@material-ui/icons/Delete';
+import BlockIcon from "@material-ui/icons/Block";
 
 class Users extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            block: false
+            block: false,
         };
         this.blockId = -1;
         this.showBlockAlert = this.showBlockAlert.bind(this);
@@ -35,19 +50,18 @@ class Users extends React.Component {
     searchUser(eve) {
         const query = eve.target.value;
         if (query && query !== "") {
-
         }
     }
 
-    changePage(eve, page) {
-
-    }
+    changePage(eve, page) { }
     render() {
         return (
             <main className="admin-content">
                 <NavBar title="Users" />
-                <div className="admin-body d-flex flex-column" style={{ height: "100%" }}>
-
+                <div
+                    className="admin-body d-flex flex-column"
+                    style={{ height: "100%" }}
+                >
                     <form className="d-flex" style={{ marginBottom: "11px" }}>
                         <TextField
                             id="standard-basic"
@@ -56,7 +70,11 @@ class Users extends React.Component {
                             style={{ flex: 1 }}
                         />
 
-                        <Button variant="contained" color="primary" style={{ marginLeft: "11px" }}>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            style={{ marginLeft: "11px" }}
+                        >
                             Search
                         </Button>
                     </form>
@@ -72,7 +90,12 @@ class Users extends React.Component {
                                 </ListItemAvatar>
                                 <ListItemText primary={`User Name ${value + 1}`} />
                                 <ListItemSecondaryAction>
-                                    <IconButton style={{ color: "#db3825" }} edge="end" aria-label="Delete" onClick={() => this.showBlockAlert(10)}>
+                                    <IconButton
+                                        style={{ color: "#db3825" }}
+                                        edge="end"
+                                        aria-label="Delete"
+                                        onClick={() => this.showBlockAlert(10)}
+                                    >
                                         <BlockIcon />
                                     </IconButton>
                                     {/* <IconButton style={{ color: "#db3825" }} edge="end" aria-label="Delete">
@@ -90,7 +113,6 @@ class Users extends React.Component {
                         color="primary"
                         style={{ marginLeft: "auto" }}
                     />
-
                 </div>
 
                 <Dialog
@@ -98,24 +120,25 @@ class Users extends React.Component {
                     onClose={this.closeBlockAlert}
                     aria-labelledby="draggable-dialog-title"
                 >
-                    <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
+                    <DialogTitle style={{ cursor: "move" }} id="draggable-dialog-title">
                         Alert
-                        </DialogTitle>
+                    </DialogTitle>
                     <DialogContent>
                         <DialogContentText>
                             Are you Sure you want to Block the User?.
-                            </DialogContentText>
+                        </DialogContentText>
                     </DialogContent>
                     <DialogActions>
                         <Button autoFocus color="primary" onClick={this.closeBlockAlert}>
                             Cancel
-                            </Button>
+                        </Button>
+
                         <Button color="primary" onClick={this.blockUser}>
                             Block
-                            </Button>
+                        </Button>
+
                     </DialogActions>
                 </Dialog>
-
             </main>
         );
     }
