@@ -28,3 +28,15 @@ export function toFormData(obj) {
     }
     return data;
 }
+
+export function getCookies() {
+    const cookies = document.cookie.split(';');
+    const ans = {};
+    for (const cookie of cookies) {
+        const key_val = cookie.split('=');
+        if (key_val.length === 2) {
+            ans[key_val[0]] = key_val[1];
+        }
+    }
+    return ans;
+}

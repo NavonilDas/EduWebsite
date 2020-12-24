@@ -14,7 +14,7 @@ import AddContent from "./components/AddContent";
 import Analysis from "./components/Analysis/index";
 
 import axios from "axios";
-import { errorHandler, HOST } from "./Api";
+import { errorHandler, getCookies, HOST } from "./Api";
 import Profile from "./components/Profile";
 
 class App extends React.Component {
@@ -27,8 +27,10 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    // TODO: Check if cookie is present
-    this.onLogin();
+    const cookies = getCookies();
+    if (cookies.ID) {
+      this.onLogin();
+    }
   }
 
   onLogin() {
@@ -85,8 +87,8 @@ class App extends React.Component {
         {this.state.isLogin ? (
           this.dashboard()
         ) : (
-          <Login onLogin={this.onLogin} />
-        )}
+            <Login onLogin={this.onLogin} />
+          )}
       </div>
     );
   }
