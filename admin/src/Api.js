@@ -18,3 +18,13 @@ export function errorHandler(err, ctx) {
         ctx.setState({ apiError: "Something Went Wrong!" });
     }
 }
+
+export function toFormData(obj) {
+    const data = new FormData();
+    for (const key in obj) {
+        if (obj[key]) {
+            data.append(key, obj[key]);
+        }
+    }
+    return data;
+}
