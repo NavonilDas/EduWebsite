@@ -1,53 +1,69 @@
-import React, { useState } from 'react';
-import { useFormik } from 'formik';
-import { Button, TextField, Typography } from '@material-ui/core';
+import React, { useState, useEffect } from "react";
+import { useFormik } from "formik";
+import { Button, TextField, Typography } from "@material-ui/core";
+import axios from "axios";
+import { HOST, toFormData } from "../Api";
 
 
 function validate(values) {
     const errors = {};
     if (values.email === "") {
-        errors.email = 'Email Required';
+        errors.email = "Email Required";
     }
     if (values.name === "") {
-        errors.name = 'Name Required';
+        errors.name = "Name Required";
     }
 
     if (values.password === "" && values.newpassword !== "") {
-        errors.password = 'Password Required';
+        errors.password = "Password Required";
     }
     if (values.password !== "" && values.newpassword === "") {
-        errors.newpassword = 'Password Required';
+        errors.newpassword = "New Password Required";
+    }
+
+    if (values.password !== "") {
+        const check = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/g;
+        if (!values.newpassword.match(check)) {
+            errors.newpassword =
+                "Password Length should be minimum 8,At least one Uppercase letter, One lowercase letter, One number and One special character";
+        }
     }
 
     return errors;
 }
 
+function onSubmit(values) {
+    // TODO: Save Data
+}
+
 const Profile = () => {
     const [state, setSate] = useState({
         email: "",
-        name: '',
-        phone: '',
-        password: '',
-        newpassword: ''
+        name: "",
+        password: "",
+        newpassword: "",
     });
 
-    // TODO: Fetch Initial Data
+    const [apiError, setApiError] = useState('');
 
+    useEffect(() => {
+        // TODO: Fetch initial Values
+    }, []);
 
     const formik = useFormik({
         initialValues: state,
         validate,
-        onSubmit: (values) => {
-            alert(JSON.stringify(values, null, 2));
-        },
+        onSubmit,
+        enableReinitialize: true
     });
 
     return (
         <div>
-
             <Typography variant="h5" gutterBottom style={{ margin: "11px 0 0 11px" }}>
                 Edit Profile
             </Typography>
+
+            <span className="errorText">{apiError}</span>
 
             <form onSubmit={formik.handleSubmit} className="profile-form">
                 <TextField
@@ -61,6 +77,7 @@ const Profile = () => {
                     label="Name"
                     required
                 />
+
                 <TextField
                     fullWidth
                     value={formik.values.email}
@@ -72,16 +89,7 @@ const Profile = () => {
                     label="Email"
                     required
                 />
-                <TextField
-                    fullWidth
-                    value={formik.values.phone}
-                    onChange={formik.handleChange}
-                    error={formik.touched.phone && Boolean(formik.errors.phone)}
-                    helperText={formik.touched.phone && formik.errors.phone}
-                    name="phone"
-                    type="tel"
-                    label="Phone Number"
-                />
+
                 <TextField
                     fullWidth
                     value={formik.values.password}
@@ -92,11 +100,14 @@ const Profile = () => {
                     type="password"
                     label="Current Password"
                 />
+
                 <TextField
                     fullWidth
                     value={formik.values.newpassword}
                     onChange={formik.handleChange}
-                    error={formik.touched.newpassword && Boolean(formik.errors.newpassword)}
+                    error={
+                        formik.touched.newpassword && Boolean(formik.errors.newpassword)
+                    }
                     helperText={formik.touched.newpassword && formik.errors.newpassword}
                     name="newpassword"
                     type="password"
