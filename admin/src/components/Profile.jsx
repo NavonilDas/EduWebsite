@@ -33,7 +33,34 @@ function validate(values) {
 }
 
 function onSubmit(values) {
-    // TODO: Save Data
+    const config = {
+        withCredentials: true,
+        headers: {
+            'content-type': 'multipart/form-data'
+        }
+    };
+    
+    const body = toFormData(values);
+    axios.put(`${HOST}users`, body, config)
+        .then(res => {
+            if (res.data.status) {
+                alert('Account Updated');
+            }
+        })
+        .catch(err => {
+            console.error(err);
+
+            if (err?.response?.status === 401) {
+                // Unauthorised Clear Cookie
+                document.cookie = 'ID=;expires=Thu, 01 Jan 1970 00:00:00 GMT'; // Clear Cookie
+                window.location = '/';
+            }
+            if (err.response?.data?.error && (typeof err.response.data.error) === 'string') {
+                alert(err.response.data.error);
+            } else {
+                alert("Something Went Wrong!");
+            }
+        });
 }
 
 const Profile = () => {
