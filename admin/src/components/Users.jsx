@@ -19,6 +19,7 @@ import React from "react";
 import NavBar from "./NavBar";
 // import DeleteIcon from '@material-ui/icons/Delete';
 import BlockIcon from "@material-ui/icons/Block";
+import PanToolIcon from '@material-ui/icons/PanTool';
 
 import axios from 'axios';
 import { errorHandler, HOST, IMG } from '../Api';
@@ -30,7 +31,9 @@ class Users extends React.Component {
             block: false,
             users: [],
             pages: 1,
-            search: ""
+            search: "",
+            selectedBlockId: -1,
+            blockStatus: "true"
         };
 
         this.showBlockAlert = this.showBlockAlert.bind(this);
@@ -42,9 +45,12 @@ class Users extends React.Component {
         this.onSearch = this.onSearch.bind(this);
     }
 
-    showBlockAlert(id) {
-        this.blockId = id;
-        this.setState({ block: true });
+    showBlockAlert(id, status) {
+        this.setState({
+            block: true,
+            selectedBlockId: id,
+            blockStatus: (status) ? "false" : "true"
+        });
     }
 
     closeBlockAlert() {
@@ -52,7 +58,22 @@ class Users extends React.Component {
     }
 
     blockUser() {
-        console.log(this.blockId);
+        console.log(this.state.blockStatus);
+        const url = `${HOST}users/block/${this.state.selectedBlockId}/${this.state.blockStatus}`;
+        axios.post(url, {}, { withCredentials: true })
+            .then(res => {
+                this.setState({
+                    users: this.state.users.map(ele => {
+                        if (ele._id === this.state.selectedBlockId) {
+                            ele.isBlocked = !ele.isBlocked;
+                        }
+                        return ele;
+                    }),
+                    blockStatus: "true",
+                    selectedBlockId: -1
+                })
+            })
+            .catch(err => errorHandler(err, this));
         this.setState({ block: false });
     }
 
@@ -102,6 +123,10 @@ class Users extends React.Component {
         this.listUsers(this.state.pages);
     }
 
+    showInfo(ele){
+        console.log(ele);
+    }
+
     render() {
         return (
             <main className="admin-content d-flex flex-column" style={{ minHeight: "100vh" }}>
@@ -139,7 +164,12 @@ class Users extends React.Component {
 
                     <List dense style={{ flex: 1 }}>
                         {this.state.users.map((ele, i) => (
-                            <ListItem key={'user' + i} button style={{ marginTop: '3px' }}>
+                            <ListItem
+                                key={'user' + i}
+                                button
+                                style={{ marginTop: '3px' }}
+                                onClick={() => this.showInfo(ele)}
+                            >
                                 <ListItemAvatar>
                                     <Avatar
                                         alt={`${ele.name}`}
@@ -152,9 +182,9 @@ class Users extends React.Component {
                                         style={{ color: "#db3825" }}
                                         edge="end"
                                         aria-label="Block"
-                                        onClick={() => this.showBlockAlert(10)}
+                                        onClick={() => this.showBlockAlert(ele._id, ele.isBlocked)}
                                     >
-                                        <BlockIcon />
+                                        {(ele.isBlocked) ? <PanToolIcon /> : <BlockIcon />}
                                     </IconButton>
                                     {/* <IconButton style={{ color: "#db3825" }} edge="end" aria-label="Delete">
                                         <DeleteIcon />
@@ -183,7 +213,7 @@ class Users extends React.Component {
                     </DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            Are you Sure you want to Block the User?.
+                            Are you Sure you want to {(this.state.blockStatus !== 'true') ? 'UnBlock' : 'Block'} the User?.
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
@@ -192,7 +222,7 @@ class Users extends React.Component {
                         </Button>
 
                         <Button color="primary" onClick={this.blockUser}>
-                            Block
+                            {(this.state.blockStatus !== 'true') ? 'UnBlock' : 'Block'}
                         </Button>
 
                     </DialogActions>
