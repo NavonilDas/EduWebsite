@@ -33,7 +33,9 @@ class Users extends React.Component {
             pages: 1,
             search: "",
             selectedBlockId: -1,
-            blockStatus: "true"
+            blockStatus: "true",
+            showInfo: false,
+            selected: null
         };
 
         this.showBlockAlert = this.showBlockAlert.bind(this);
@@ -43,12 +45,17 @@ class Users extends React.Component {
         this.listUsers = this.listUsers.bind(this);
         this.changePage = this.changePage.bind(this);
         this.onSearch = this.onSearch.bind(this);
+        this.showInfo = this.showInfo.bind(this);
+
+        this.renderAlert = this.renderAlert.bind(this);
+        this.renderInfo = this.renderInfo.bind(this);
     }
 
     showBlockAlert(id, status) {
         this.setState({
             block: true,
             selectedBlockId: id,
+            showInfo: false,
             blockStatus: (status) ? "false" : "true"
         });
     }
@@ -123,8 +130,63 @@ class Users extends React.Component {
         this.listUsers(this.state.pages);
     }
 
-    showInfo(ele){
+    showInfo(ele) {
         console.log(ele);
+        this.setState({
+            block: true,
+            selected: ele,
+            showInfo: true
+        });
+    }
+
+    renderInfo() {
+        if (!this.state.selected) return;
+        return (
+            <div>
+                <DialogTitle>
+                    User Info
+                </DialogTitle>
+                <DialogContent>
+
+                    <DialogContentText>
+                        <b>Username : </b> @{this.state.selected.username} <br />
+                        <b>Name : </b> {this.state.selected.name} <br />
+                        <b>Email : </b> {this.state.selected.email} <br />
+                    </DialogContentText>
+
+                </DialogContent>
+                <DialogActions>
+                    <Button autoFocus color="primary" onClick={this.closeBlockAlert}>
+                        OK
+                    </Button>
+                </DialogActions>
+            </div>
+        );
+    }
+
+    renderAlert() {
+        return (
+            <div>
+                <DialogTitle>
+                    Alert
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Are you Sure you want to {(this.state.blockStatus !== 'true') ? 'UnBlock' : 'Block'} the User?.
+                        </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button autoFocus color="primary" onClick={this.closeBlockAlert}>
+                        Cancel
+                    </Button>
+
+                    <Button color="primary" onClick={this.blockUser}>
+                        {(this.state.blockStatus !== 'true') ? 'UnBlock' : 'Block'}
+                    </Button>
+
+                </DialogActions>
+            </div>
+        );
     }
 
     render() {
@@ -208,24 +270,7 @@ class Users extends React.Component {
                     onClose={this.closeBlockAlert}
                     aria-labelledby="draggable-dialog-title"
                 >
-                    <DialogTitle style={{ cursor: "move" }} id="draggable-dialog-title">
-                        Alert
-                    </DialogTitle>
-                    <DialogContent>
-                        <DialogContentText>
-                            Are you Sure you want to {(this.state.blockStatus !== 'true') ? 'UnBlock' : 'Block'} the User?.
-                        </DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button autoFocus color="primary" onClick={this.closeBlockAlert}>
-                            Cancel
-                        </Button>
-
-                        <Button color="primary" onClick={this.blockUser}>
-                            {(this.state.blockStatus !== 'true') ? 'UnBlock' : 'Block'}
-                        </Button>
-
-                    </DialogActions>
+                    {(this.state.showInfo) ? this.renderInfo() : this.renderAlert()}
                 </Dialog>
             </main>
         );
