@@ -88,8 +88,14 @@ class Chapters extends React.Component {
             body[key].push({ id: item._id, position: i });
         }
 
-        // TODO: Send API Request
-        console.log(body);
+        // Send Update Request
+        axios.post(`${HOST}content/chapter`, body, { withCredentials: true })
+            .then(_ => {
+                this.setState({ saveChanges: false });
+                this.positions = [];
+            })
+            .catch(err => errorHandler(err, this));
+
     }
 
     modalClose() {
