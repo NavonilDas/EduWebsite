@@ -168,7 +168,10 @@ class Chapters extends React.Component {
 
     deleteItem(eve, ele) {
         eve.stopPropagation();
-        // TODO Ask Confirmation
+        
+        const ans = window.confirm("Are You Sure, You want to Delete it");
+        if(!ans) return;
+
         let request = null;
         if (ele.video) {
             request = axios.delete(`${HOST}videos/${ele._id}`, { withCredentials: true });

@@ -118,7 +118,9 @@ class ViewCourse extends React.Component {
 
     delete(eve, ele) {
         eve.stopPropagation();
-        // TODO: Ask Confirmation
+        const ans = window.confirm("Are You Sure, You want to Delete it");
+        if(!ans) return;
+
         let request = null;
         if (ele.name) {
             // Delete Chapter

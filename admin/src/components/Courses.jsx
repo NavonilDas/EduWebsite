@@ -50,6 +50,11 @@ class Courses extends React.Component {
 
     deleteCourse(id) {
         if (!id) return;
+
+        const ans = window.confirm("Are You Sure, You want to Delete it");
+        if(!ans) return;
+
+
         axios.delete(`${HOST}courses/${id}`, { withCredentials: true })
             .then(res => {
                 if (res.data) {

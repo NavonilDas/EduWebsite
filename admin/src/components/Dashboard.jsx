@@ -47,6 +47,10 @@ class Dashboard extends React.Component {
     }
 
     deleteCategory(id) {
+
+        const ans = window.confirm("Are You Sure, You want to Delete it");
+        if(!ans) return;
+
         axios.delete(`${HOST}categories/${id}`, { withCredentials: true })
             .then(res => {
                 if (res.data.error) {

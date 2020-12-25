@@ -39,7 +39,9 @@ class CreateTest extends React.Component {
     }
 
     deleteQuestion(id) {
-        // TODO: ASK Confirmation
+        const ans = window.confirm("Are You Sure, You want to Delete it");
+        if(!ans) return;
+
         axios.delete(`${HOST}test/del/${this.state.test_id}/${id}`, { withCredentials: true })
             .then(res => {
                 this.setState({
